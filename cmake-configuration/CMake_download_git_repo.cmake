@@ -52,8 +52,13 @@ function(process_modules_from_file file_path)
             list(GET tokens 1 url)
             list(GET tokens 2 tag)
 
-            message(STATUS "Processing ${url} → ${full_dir}")
+            message(STATUS "Processing ${url} → ${CMAKE_SOURCE_DIR}/Modules/${dir}")
             download_git_repo("${url}" "${tag}" "${CMAKE_SOURCE_DIR}/Modules/${dir}")
+
+            # Add the cloned repo to the build
+            if(EXISTS "${CMAKE_SOURCE_DIR}/Modules/${dir}/CMakeLists.txt")
+                add_subdirectory("${CMAKE_SOURCE_DIR}/Modules/${dir}")
+            endif()
 
             # Recursively check for modules.txt inside the downloaded repo
             set(submodules_file "${CMAKE_SOURCE_DIR}/Modules/${dir}/modules.txt")

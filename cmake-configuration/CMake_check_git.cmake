@@ -1,6 +1,6 @@
-set(CURRENT_LIST_DIR ..)
+set(CURRENT_LIST_DIR ${CMAKE_SOURCE_DIR})
 if (NOT DEFINED pre_configure_dir)
-    set(pre_configure_dir ..)
+    set(pre_configure_dir ${CMAKE_SOURCE_DIR})
 endif ()
 
 if (NOT DEFINED post_configure_dir)
@@ -66,8 +66,7 @@ function(check_git_setup)
             -Dpre_configure_dir=${pre_configure_dir}
             -Dpost_configure_file=${post_configure_dir}
             -DGIT_HASH_CACHE=${GIT_HASH_CACHE}
-            -DGIT_HASH_CACHE=${DBC_HASH_CACHE}
-            -P ${CURRENT_LIST_DIR}/CheckGit.cmake
+            -P ${CURRENT_LIST_DIR}/cmake-configuration/CMake_check_git.cmake
             BYPRODUCTS ${post_configure_file}
     )
 

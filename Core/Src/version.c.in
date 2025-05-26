@@ -1,0 +1,5 @@
+#include <stdint-gcc.h>
+#include "version.h"
+#include "../Inc/version.h"
+
+const uint32_t GIT_HASH = 0x@GIT_HASH@;
