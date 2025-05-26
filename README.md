@@ -8,7 +8,8 @@ This repo includes a setup for developing on STM32 using a custom build toolchai
   - Project name: (same name as the folder/repo name)
   - Project location: (folder above the folder/repo)
   - Toolchain/IDE: STM32CubeIDE and Generate under Root enabled
-3. Click generate code in the top right and run from 
+3. Click generate code in the top right and run from your or my favourite IDE.
+4. To create your own code, you can use the Project folder.
 
 ## Using versions
 The versions will be included at compile-time in a file called version.c. The version.h already exists before compilation, so you can include that in your file where you need the GIT hash. You can then use the variable with the first 6 tokens of the git hash in your project.
