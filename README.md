@@ -15,7 +15,7 @@ The versions will be included at compile-time in a file called version.c. The ve
 ```.c
 extern const uint32_t GIT_HASH;
 ```
-These is its definition.
+This is its definition.
 
 ## Using modules
 To include modules, add the module name, SSH Git URL and hash/version to the modules.txt file:
