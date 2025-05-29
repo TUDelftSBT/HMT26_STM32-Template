@@ -68,7 +68,7 @@ endforeach()
 
 message(STATUS "Found include directories: ${FINAL_INC_DIRS}")
 
-include_directories(${INC_DIRS} Project/Inc ${includes})
+include_directories(${FINAL_INC_DIRS} Project/Inc ${includes})
 
 add_definitions(${defines})
 
