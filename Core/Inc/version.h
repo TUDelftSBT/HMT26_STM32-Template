@@ -1,7 +1,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 extern const uint32_t GIT_HASH;
 

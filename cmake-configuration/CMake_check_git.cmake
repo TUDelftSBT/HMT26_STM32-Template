@@ -27,9 +27,10 @@ function(check_git_version)
     # Get the latest abbreviated commit hash of the working branch
     execute_process(
             COMMAND git rev-parse --short=6 HEAD
-            WORKING_DIRECTORY ..
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             OUTPUT_VARIABLE GIT_HASH
             OUTPUT_STRIP_TRAILING_WHITESPACE
+            RESULT_VARIABLE GIT_RESULT
     )
 
     CheckGitRead(GIT_HASH_CACHE)
@@ -42,21 +43,19 @@ function(check_git_version)
         file(COPY ${pre_configure_dir}/Core/Inc/version.h DESTINATION ${post_configure_dir})
     endif()
 
-
     if (NOT DEFINED GIT_HASH_CACHE)
         set(GIT_HASH_CACHE "INVALID")
     endif ()
 
     # Only update the git_version.cpp if the hash has changed. This will
     # prevent us from rebuilding the project more than we need to.
-    if (NOT ${GIT_HASH} STREQUAL ${GIT_HASH_CACHE} OR NOT EXISTS ${post_configure_file})
-        # Set che GIT_HASH_CACHE variable the next build won't have
+    if (GIT_RESULT EQUAL 0 AND (NOT ${GIT_HASH} STREQUAL ${GIT_HASH_CACHE} OR NOT EXISTS ${post_configure_file}))
+        # Set the GIT_HASH_CACHE variable so the next build won't have
         # to regenerate the source file.
         CheckGitWrite(${GIT_HASH})
 
         configure_file(${pre_configure_file} ${post_configure_file} @ONLY)
     endif ()
-
 endfunction()
 
 function(check_git_setup)
