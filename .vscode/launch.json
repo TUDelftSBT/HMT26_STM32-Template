@@ -1,29 +1,33 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "cortex-debug",
-        "request": "launch",
-        "name": "Debug STM32 (OpenOCD)",
-        "servertype": "openocd",
-        "cwd": "${workspaceFolder}",
-        "executable": "build/your_project.elf", // Change project name accordingly
-        "device": "STM32F429ZGTX", // Change device name accordingly
-        "configFiles": [
-          "interface/stlink.cfg",
-          "target/stm32f4x.cfg"
-        ]
-      },
-      {
-        "type": "cortex-debug",
-        "request": "launch",
-        "name": "Debug STM32 (External GDB Server)",
-        "servertype": "external",
-        "gdbTarget": "localhost:3333", // Change remote IP:port
-        "cwd": "${workspaceFolder}",
-        "executable": "build/your_project.elf", // Change project name accordingly
-        "device": "STM32F429ZGTX", // Change device name accordingly
-        "preLaunchTask": "flash-stm32"
-      }
-    ]
-  }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "cortex-debug",
+      "request": "launch",
+      "name": "Debug STM32 (OpenOCD)",
+      "servertype": "openocd",
+      "cwd": "${workspaceFolder}",
+      "executable": "build/your_project.elf", // Change project name accordingly
+      "device": "STM32F429ZGTX",              // Change device name accordingly
+      "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32f4x.cfg"
+      ]
+    },
+    {
+      "type": "cortex-debug",
+      "request": "launch",
+      "name": "Debug STM32 (External GDB Server)",
+      "servertype": "external",
+      "gdbTarget": "192.168.4.1:3333",      // Change remote IP:port
+      "cwd": "${workspaceFolder}",
+      "executable": "build/test-node.elf",  // Change project name accordingly
+      "device": "STM32F446RET6",            // Change device name accordingly
+      "showDevDebugOutput": "raw",
+      "preLaunchCommands": [
+        "load",                            
+        "monitor reset halt"
+      ]
+    }
+  ]
+}

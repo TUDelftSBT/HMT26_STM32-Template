@@ -2,14 +2,18 @@
     "name": "STM32 Development Container",
     "dockerFile": "Dockerfile",
     "context": "..",
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
+                "ms-vscode.cortex-debug"
+            ]
+        }
     },
-    "extensions": [
-        "ms-vscode.cmake-tools",
-        "ms-vscode.cpptools",
-        "ms-vscode.cortex-debug"
-    ],
     "postCreateCommand": "cmake -DCMAKE_TOOLCHAIN_FILE=./.devcontainer/arm-none-eabi-toolchain.cmake -B build",
     "remoteUser": "vscode"
 }
