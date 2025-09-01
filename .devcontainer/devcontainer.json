@@ -2,6 +2,9 @@
     "name": "STM32 Development Container",
     "dockerFile": "Dockerfile",
     "context": "..",
+    "mounts": [
+        "source=${env:USERPROFILE}\\.ssh,target=/home/vscode/.ssh,type=bind" // Works on windows only
+    ],
     "customizations": {
         "vscode": {
             "settings": {

@@ -4,19 +4,19 @@ if (NOT DEFINED pre_configure_dir)
 endif ()
 
 if (NOT DEFINED post_configure_dir)
-    set(post_configure_dir ${CMAKE_BINARY_DIR}/generated)
+    set(post_configure_dir ${CMAKE_CURRENT_BINARY_DIR}/generated)
 endif ()
 
 set(pre_configure_file ${pre_configure_dir}/Core/Src/version.c.in)
-set(post_configure_file ${post_configure_dir}/Core/Src/version.c)
+set(post_configure_file ${post_configure_dir}/git/version.c)
 
 function(CheckGitWrite git_hash)
-    file(WRITE ${CMAKE_BINARY_DIR}/git-state.txt ${git_hash})
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/git-state.txt ${git_hash})
 endfunction()
 
 function(CheckGitRead git_hash)
-    if (EXISTS ${CMAKE_BINARY_DIR}/git-state.txt)
-        file(STRINGS ${CMAKE_BINARY_DIR}/git-state.txt CONTENT)
+    if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/git-state.txt)
+        file(STRINGS ${CMAKE_CURRENT_BINARY_DIR}/git-state.txt CONTENT)
         LIST(GET CONTENT 0 var)
 
         set(${git_hash} ${var} PARENT_SCOPE)
@@ -39,8 +39,8 @@ function(check_git_version)
         file(MAKE_DIRECTORY ${post_configure_dir})
     endif ()
 
-    if (NOT EXISTS ${post_configure_dir}/Core/Inc/version.h)
-        file(COPY ${pre_configure_dir}/Core/Inc/version.h DESTINATION ${post_configure_dir})
+    if (NOT EXISTS ${post_configure_dir}/git/version.h)
+        file(COPY ${pre_configure_dir}/Core/Inc/version.h DESTINATION ${post_configure_dir}/git)
     endif()
 
     if (NOT DEFINED GIT_HASH_CACHE)
@@ -65,12 +65,12 @@ function(check_git_setup)
             -Dpre_configure_dir=${pre_configure_dir}
             -Dpost_configure_file=${post_configure_dir}
             -DGIT_HASH_CACHE=${GIT_HASH_CACHE}
-            -P ${CURRENT_LIST_DIR}/cmake-configuration/CMake_check_git.cmake
+            -P ${CURRENT_LIST_DIR}/cmake/openstmodules/CMake_check_git.cmake
             BYPRODUCTS ${post_configure_file}
     )
 
-    add_library(git_version ${CMAKE_BINARY_DIR}/generated/Core/Src/version.c )
-    target_include_directories(git_version PUBLIC ${CMAKE_BINARY_DIR}/generated)
+    add_library(git_version ${CMAKE_CURRENT_BINARY_DIR}/generated/git/version.c )
+    target_include_directories(git_version PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/generated/git)
     add_dependencies(git_version AlwaysCheckGit)
 
     check_git_version()
