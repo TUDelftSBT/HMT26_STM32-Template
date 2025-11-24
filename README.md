@@ -9,7 +9,8 @@ This repo includes a setup for developing on STM32 using a custom build toolchai
 2. Open a new STM32CubeMX project and set the following settings in the project manager tab:
   - Project name: (same name as the folder/repo name)
   - Project location: (folder above the folder/repo)
-  - Toolchain/IDE: STM32CubeIDE and Generate under Root enabled
+  - Application structure: Advanced
+  - Toolchain/IDE: CMake
 3. Click generate code in the top right and run from your or my favourite IDE. If you're using vscode, use the included devcontainer. This allows you to build and debug easily using the ESProgrammer. 
 4. To create your own code, you can use the Project folder.
 
