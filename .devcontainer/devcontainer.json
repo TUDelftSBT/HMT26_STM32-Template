@@ -17,6 +17,7 @@
             ]
         }
     },
+    "runArgs": ["--privileged", "--device", "/dev/bus/usb/001/002"], // Adjust USB device if needed, use lsusb to identify the identifier. Priviliged should be enough in most cases.
     "postCreateCommand": "cmake -DCMAKE_TOOLCHAIN_FILE=./.devcontainer/arm-none-eabi-toolchain.cmake -B build",
-    "remoteUser": "vscode"
+    "remoteUser": "root"
 }

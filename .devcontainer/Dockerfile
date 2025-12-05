@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,7 @@ RUN apt-get update && \
     bash /tmp/cmake.sh --skip-license --prefix=/usr/local && \
     rm /tmp/cmake.sh
 
-# Install necessary packages
+# Install build dependencies for OpenOCD and general tools
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -20,8 +20,34 @@ RUN apt-get update && apt-get install -y \
     make \
     xz-utils \
     tar \
+    pkg-config \
+    libtool \
+    autoconf \
+    automake \
+    texinfo \
+    libusb-1.0-0-dev \
+    libftdi1-dev \
+    libhidapi-dev \
+    libjaylink-dev \
+    libftdi1-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Build jimTcl
+RUN git clone https://github.com/msteveb/jimtcl.git /tmp/jimtcl && \
+    cd /tmp/jimtcl && \
+    ./configure && make -j$(nproc) && make install && \
+    rm -rf /tmp/jimtcl
+
+# Build and install OpenOCD from source (latest master)
+RUN git clone --recursive https://github.com/openocd-org/openocd.git /tmp/openocd && \
+    cd /tmp/openocd && \
+    ./bootstrap && \
+    ./configure --enable-stlink --enable-cmsis-dap --disable-werror && \
+    make -j$(nproc) && \
+    make install && \
+    rm -rf /tmp/openocd
+
+# Install ARM GNU Toolchain
 RUN wget -qO- https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz \
     | tar -xJ -C /opt && \
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc && \
@@ -36,17 +62,12 @@ RUN wget -qO- https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/bi
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb && \
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-ranlib /usr/bin/arm-none-eabi-ranlib && \
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-strip /usr/bin/arm-none-eabi-strip
-# Add VSCode user and set permissions
+
+# Add VSCode user
 RUN useradd -ms /bin/bash vscode && \
     echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER vscode
 
-# Set the working directory
-WORKDIR /workspace
-
-# Copy the project files into the container
-COPY . .
-
-# Set the default command to build the project
-CMD ["cmake", .]
+WORKDIR /workspaces
+RUN chown -R vscode:vscode /workspaces

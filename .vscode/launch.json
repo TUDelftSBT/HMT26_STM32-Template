@@ -4,13 +4,19 @@
     {
       "type": "cortex-debug",
       "request": "launch",
+      "runToEntryPoint": "main",
+      "preLaunchCommands": [
+        "load",                            
+        "monitor reset halt"
+      ],
       "name": "Debug STM32 (OpenOCD)",
       "servertype": "openocd",
       "cwd": "${workspaceFolder}",
+      "interface": "swd",
       "executable": "build/your_project.elf", // Change project name accordingly
       "device": "STM32F429ZGTX",              // Change device name accordingly
       "configFiles": [
-        "interface/stlink.cfg",
+        "interface/stlink.cfg", // Point to your /openocd/scripts folder
         "target/stm32f4x.cfg"
       ]
     },

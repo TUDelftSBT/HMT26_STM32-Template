@@ -28,8 +28,14 @@ example ssh@gitlab.com/example.ssh main
 ```
 
 ## Running
+### On windows
 1. Compile your code using the build button in vscode (should automatically appear when you load the devcontainer).
-2. Debug and flash your code over internet using the ESProgrammer. Other methods are possible, but these don't work very well when flashing from WSL/docker since you cannot forward USB ports easily.
+2. Debug and flash your code over internet using the ESProgrammer. If you are using the vscode devcontainer, you can use `usbipd list` to list all USB devices on windows, `usbipd bind --busid <busid of your device>` to bind the USB device (only done once) and run `usbipd attach --wsl --busid <busid of your device> --auto-attach` everytime you want to flash, this will automatically forward the device to your PC.
+
+### On Linux
+1. Install OpenOCD from source (via package manager are almost always outdated)
+2. Install arm-eabi-none from source.
+3. You can now easily flash and build from linux. Make sure to setup the 
 
 ## Credits
 Template created by Daan Posthumus.
