@@ -30,7 +30,7 @@ example ssh@gitlab.com/example.ssh main
 ## Running
 ### On windows
 1. Compile your code using the build button in vscode (should automatically appear when you load the devcontainer).
-2. Debug and flash your code over internet using the ESProgrammer. If you are using the vscode devcontainer, you can use `usbipd list` to list all USB devices on windows, `usbipd bind --busid <busid of your device>` to bind the USB device (only done once) and run `usbipd attach --wsl --busid <busid of your device> --auto-attach` everytime you want to flash, this will automatically forward the device to your PC.
+2. Debug and flash your code over internet using the ESProgrammer (personal project of mine). You can also flash using an OpenOCD adapter like the STLink: if you are using the vscode devcontainer, you can use `usbipd list` to list all USB devices on windows, `usbipd bind --busid <busid of your device>` to bind the USB device (only done once) and run `usbipd attach --wsl --busid <busid of your device> --auto-attach` everytime you want to flash, this will automatically forward the device to your PC. You should be able to debug and flash using OpenOCD.
 
 ### On Linux
 1. Install OpenOCD from source (via package manager are almost always outdated).
