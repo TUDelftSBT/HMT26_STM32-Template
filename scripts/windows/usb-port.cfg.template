@@ -1,0 +1,4 @@
+# Remove the `.template` extension
+
+# For example:
+USBPORT=1-2

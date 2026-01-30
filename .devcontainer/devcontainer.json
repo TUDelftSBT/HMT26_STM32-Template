@@ -3,7 +3,8 @@
     "dockerFile": "Dockerfile",
     "context": "..",
     "mounts": [
-        "source=${env:USERPROFILE}\\.ssh,target=/home/vscode/.ssh,type=bind" // Works on windows only
+        "source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
+        "source=/dev/bus/usb,target=/dev/bus/usb,type=bind"
     ],
     "customizations": {
         "vscode": {
@@ -11,13 +12,14 @@
                 "terminal.integrated.shell.linux": "/bin/bash"
             },
             "extensions": [
+                "mcu-debug.debug-tracker-vscode",
+                "marus25.cortex-debug",
                 "ms-vscode.cmake-tools",
-                "ms-vscode.cpptools",
-                "marus25.cortex-debug"
+                "ms-vscode.cpptools"
             ]
         }
     },
-    "runArgs": ["--privileged", "--device", "/dev/bus/usb/001/002"], // Adjust USB device if needed, use lsusb to identify the identifier. Priviliged should be enough in most cases.
-    "postCreateCommand": "cmake -DCMAKE_TOOLCHAIN_FILE=./.devcontainer/arm-none-eabi-toolchain.cmake -B build",
+    // "runArgs": ["--privileged", "--device", "/dev/bus/usb/001/002"], // Adjust USB device if needed, use lsusb to identify the identifier. Priviliged should be enough in most cases.
+    "runArgs": ["--privileged"], // This seems to work fine, otherwise use the command above.
     "remoteUser": "root"
 }
