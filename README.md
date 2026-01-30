@@ -5,10 +5,17 @@
 This repo includes a setup for developing on STM32 using a custom build toolchain which allows you to use other GIT repositories as modules.
 
 ## Project setup
-1. Fork this project or create a copy.
+1. Fork this project or use it as a template. (There are [some differences](https://stackoverflow.com/questions/62082123/github-what-is-the-difference-between-template-and-fork-concepts-and-when-to-us))
 2. Change the STM32CUBEMX project accordingly via the `HMT26_template.ioc` file or more easily via the STM32CUBEMX editor.
-3. Click generate code in the top right and run from your or my favourite IDE. If you're using vscode, use the included devcontainer. This allows you to build and debug easily using the ESProgrammer. 
-4. To create your own code, you can use the Project folder.
+3. Click generate code in STM32CUBEMX
+4. Use your favorite IDE. If you're using vscode, use the included devcontainer. See below how to open the devcontainer via a task. 
+5. To create your own code, you can use the Project folder.
+
+### Extra steps for Windows
+1. Run the `usb-passthrough-install.bat` to install `usbipd` on Windows.
+2. Use `usb-passthrough-list.bat` to find where your STLink is connected.
+3. Create a copy of the `usb-port.cfg.template` and rename it to `usb-port.cfg` and edit the usb port to the one you just found.
+4. Run `usb-passthrough-bind.bat`
 
 ## ST32CUBEMX project
 There is one file in this project related to the ST32CUBEMX project. ST32CUBEMX can be installed via the website, then going to downloads, entering your email and then installing it via the installer that you got in your email.
@@ -38,16 +45,28 @@ example ssh@gitlab.com/example.ssh main
 
 ## Running
 ### On windows
-1. Compile your code using the build button in vscode (should automatically appear when you load the devcontainer).
-2. Debug and flash your code over internet using the ESProgrammer (personal project of mine). You can also flash using an OpenOCD adapter like the STLink: if you are using the vscode devcontainer, you can use `usbipd list` to list all USB devices on windows, `usbipd bind --busid <busid of your device>` to bind the USB device (only done once) and run `usbipd attach --wsl --busid <busid of your device> --auto-attach` everytime you want to flash, this will automatically forward the device to your PC. You should be able to debug and flash using OpenOCD.
+> [!IMPORTANT]
+> You must have followed the setup for windows above!!!
+
+1. Open the devcontainer using the `Rebuild & Reopen Devcontainer` task (so open it via the keybindings below), not the default one from VSCode. This task attaches the USB port everytime you enter the devcontainer.
+2. Build and flash using the shortcut below
 
 ### On Linux
 1. Install OpenOCD from source (via package manager are almost always outdated).
 2. Install arm-eabi-none from source.
 3. You can now easily flash and build from linux. Make sure to setup the $PATH variables and launch.json correcctly.
 
+## Keybindings
+| Action    | Shortcut |
+| -------- | ------- |
+| Open task  | `ctrl+shift+P` then `Run task` then your task    |
+| Build and flash (in container) | `ctrl+shift+b` |
+
+## Custom Keybindings
+Erik wanted to add custom keybindings for certain tasks, but this did not work. He tried to follow the [vscode docs](https://code.visualstudio.com/docs/debugtest/tasks#_binding-keyboard-shortcuts-to-tasks) and [this stackoverflow post](https://stackoverflow.com/questions/48945319/a-keybindings-json-per-workspace-in-visual-studio-code), but did not manage to get it to work. So fix it if you'd like!
+
 ## Credits
-Template created by Daan Posthumus.
+Template created by Daan Posthumus. Edited by Erik van Weelderen.
 
 ## License
 Feel free to use it.
