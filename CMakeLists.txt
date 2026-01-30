@@ -19,7 +19,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME compute-module)
+# You can change the name, but then you manually have to search for 'HMT26_FIRMWARE.elf' and change it everywhere in this repository.
+set(CMAKE_PROJECT_NAME HMT26_FIRMWARE)
 
 # Include toolchain file
 include("cmake/gcc-arm-none-eabi.cmake")
@@ -31,6 +32,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 enable_language(C ASM)
 
 # Core project settings
+# Cannot change the project name to something else other than the CMAKE_PROJECT_NAME, because
+# then it gives errors with the STM32 generated code.
 project(${CMAKE_PROJECT_NAME})
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
