@@ -6,13 +6,22 @@ This repo includes a setup for developing on STM32 using a custom build toolchai
 
 ## Project setup
 1. Fork this project or create a copy.
-2. Open a new STM32CubeMX project and set the following settings in the project manager tab:
-  - Project name: (same name as the folder/repo name)
-  - Project location: (folder above the folder/repo)
-  - Application structure: Advanced
-  - Toolchain/IDE: CMake
+2. Change the STM32CUBEMX project accordingly via the `HMT26_template.ioc` file or more easily via the STM32CUBEMX editor.
 3. Click generate code in the top right and run from your or my favourite IDE. If you're using vscode, use the included devcontainer. This allows you to build and debug easily using the ESProgrammer. 
 4. To create your own code, you can use the Project folder.
+
+## ST32CUBEMX project
+There is one file in this project related to the ST32CUBEMX project. ST32CUBEMX can be installed via the website, then going to downloads, entering your email and then installing it via the installer that you got in your email.
+
+The ST32CUBEMX project is used to automatically generate code. In there you can set the pinout, which peripherals to enable, and which functionality to use of the STM32. The default project in here enables the entire team to have the same general configuration. Of course, you have to change it per PCB type / codebase.
+
+If you wish to change the name of the project, you can do that quite easily. You can change the name of the `HMT26_template.ioc` file, then you have to edit the two fields of the file: 
+```
+ProjectManager.ProjectFileName=HMT26_template.ioc
+ProjectManager.ProjectName=HMT26_template
+```
+
+STM32CUBEMX should then notice the changed project name.
 
 ## Using GIT hashes in your code as versions
 The versions will be included at compile-time in a file called version.c. The version.h already exists before compilation, so you can include that in your file where you need the GIT hash. You can then use the variable with the first 6 tokens of the git hash in your project.
