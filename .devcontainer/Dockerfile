@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -62,6 +62,64 @@ RUN wget -qO- https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/bi
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb && \
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-ranlib /usr/bin/arm-none-eabi-ranlib && \
     ln -s /opt/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-strip /usr/bin/arm-none-eabi-strip
+
+FROM base AS templatespecific
+# Install pre-commit: https://pre-commit.com/
+RUN apt-get update && apt-get install pipx -y && \
+    pipx ensurepath && \
+    pipx install pre-commit
+
+# Install LLVM (includes clang)
+RUN apt-get update && apt-get install -y \
+    llvm \
+    clang \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uncrustify
+RUN apt-get update && apt-get install -y \
+    uncrustify \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install cppcheck
+RUN apt-get update && apt-get install -y \
+    cppcheck \
+    && rm -rf /var/lib/apt/lists/*
+
+# TODO: Fix IWYU
+# RUN git clone https://github.com/include-what-you-use/include-what-you-use.git /tmp/iwyu && \
+#     cd /tmp/iwyu && \
+#     mkdir build && cd build \
+#     cmake -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/lib/llvm ../iwyu \
+#     make install \
+#     rm -rf /tmp/iwyu
+    # TODO: add to path
+
+# --------------------
+# Install OCLint
+# --------------------
+
+ENV OCLINT_VERSION=24.11
+
+RUN wget -q \
+    https://github.com/oclint/oclint/releases/download/v24.11/oclint-24.11-llvm-16.0.4-x86_64-linux-ubuntu-24.04.tar.gz \
+    -O /tmp/oclint.tar.gz \
+    && mkdir -p /opt/oclint \
+    && tar -xzf /tmp/oclint.tar.gz \
+        --no-same-owner \
+        --no-same-permissions \
+        -C /opt \
+    && ln -s /opt/oclint-${OCLINT_VERSION}/bin/oclint /usr/local/bin/oclint \
+    && ln -s /opt/oclint-${OCLINT_VERSION}/bin/oclint-json-compilation-database /usr/local/bin/oclint-json-compilation-database \
+    && rm /tmp/oclint.tar.gz
+
+
+# Verify installs (optional but useful)
+RUN llvm-config --version \
+    && uncrustify --version \
+    && cppcheck --version \
+    # && include-what-you-use --version
+    && oclint --version
+    
 
 # Add VSCode user
 RUN useradd -ms /bin/bash vscode && \
