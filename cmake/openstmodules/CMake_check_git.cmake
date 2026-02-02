@@ -35,11 +35,11 @@ function(check_git_version)
 
     CheckGitRead(GIT_HASH_CACHE)
 
-    if (NOT EXISTS ${post_configure_dir})
+    if (NOT EXISTS "${post_configure_dir}")
         file(MAKE_DIRECTORY ${post_configure_dir})
     endif ()
 
-    if (NOT EXISTS ${post_configure_dir}/git/version.h)
+    if (NOT EXISTS "${post_configure_dir}/git/version.h")
         file(COPY ${pre_configure_dir}/Core/Inc/version.h DESTINATION ${post_configure_dir}/git)
     endif()
 
