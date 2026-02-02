@@ -65,6 +65,39 @@ example ssh@gitlab.com/example.ssh main
 ## Custom Keybindings
 Erik wanted to add custom keybindings for certain tasks, but this did not work. He tried to follow the [vscode docs](https://code.visualstudio.com/docs/debugtest/tasks#_binding-keyboard-shortcuts-to-tasks) and [this stackoverflow post](https://stackoverflow.com/questions/48945319/a-keybindings-json-per-workspace-in-visual-studio-code), but did not manage to get it to work. So fix it if you'd like!
 
+## Setup - Teun
+### Build instructions
+
+The project uses docker so that we are not dependent of the OS. 
+
+Make sure to have Docker Desktop installed and running. 
+
+To build the docker image
+
+```
+docker build -t stm32-dev -f .devcontainer/Dockerfile .
+```
+
+Then to run a container with the repo mounted
+
+```
+docker run --rm -it -v ${PWD}:/work -w /work stm32-dev bash
+```
+
+required on Windows bind mounts, not sure if others will have issues, but git has a safety check 
+
+```
+git config --global --add safe.directory /work
+```
+
+Build (+ some other stuff)
+```
+rm -rf build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -j
+```
+
+
 ## Credits
 Template created by Daan Posthumus. Edited by Erik van Weelderen.
 
