@@ -32,6 +32,11 @@ RUN apt-get update && apt-get install -y \
     libftdi1-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cppcheck \
+    && rm -rf /var/lib/apt/lists/*
+
 # Build jimTcl
 RUN git clone https://github.com/msteveb/jimtcl.git /tmp/jimtcl && \
     cd /tmp/jimtcl && \

@@ -97,6 +97,39 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build -j
 ```
 
+if you want to run the tests in test folders do the following
+
+```
+rm -rf build-host
+cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-host -j
+ctest --test-dir build-host --output-on-failure
+```
+
+If gcc and g++ not working then first of that is very interesting and probably a problem but to check run
+
+```
+gcc --version
+g++ --version
+```
+
+and fix 
+```
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+docker build -t stm32-dev -f .devcontainer/Dockerfile .
+```
+
+### or ...
+you just run in the cmd
+
+```
+.\scripts\image.ps1
+.\scripts\build.ps1
+.\scripts\test.ps1
+```
 
 ## Credits
 Template created by Daan Posthumus. Edited by Erik van Weelderen.

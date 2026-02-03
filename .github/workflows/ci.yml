@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4  # v4 is current major :contentReference[oaicite:0]{index=0}
+
+      # Buildx + cached docker builds (makes CI faster)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3  # v3 series :contentReference[oaicite:1]{index=1}
+
+      - name: Build dev image (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          tags: stm32-dev:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        # build-push-action v6 is current major :contentReference[oaicite:2]{index=2}
+
+      - name: Static analysis (cppcheck)
+        run: |
+          docker run --rm -t \
+            -v "${PWD}:/work" -w /work \
+            stm32-dev:ci bash -lc "\
+              cppcheck \
+                --enable=all --inconclusive \
+                --error-exitcode=1 \
+                --inline-suppr \
+                --suppress=missingIncludeSystem \
+                -i build -i Drivers -i cmake -i .devcontainer -i .vscode -i .idea \
+                -I Project/Inc \
+                -I Modules \
+                Project Modules \
+            "
+
+      - name: Build firmware (ARM)
+        run: |
+          docker run --rm -t \
+            -v "${PWD}:/work" -w /work \
+            stm32-dev:ci bash -lc "\
+              git config --global --add safe.directory /work || true; \
+              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug; \
+              cmake --build build -j \
+            "
+
+      - name: Unit tests (host)
+        run: |
+          docker run --rm -t \
+            -v "${PWD}:/work" -w /work \
+            stm32-dev:ci bash -lc "\
+              git config --global --add safe.directory /work || true; \
+              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug; \
+              cmake --build build-host -j; \
+              ctest --test-dir build-host --output-on-failure \
+            "
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-elf
+          path: build/*.elf
