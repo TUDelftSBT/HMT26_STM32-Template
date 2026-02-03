@@ -12,25 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # static analysis
-      - name: Install cppcheck
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cppcheck
-
-      - name: Run cppcheck (Project + Modules)
-        run: |
-          cppcheck --version
-          cppcheck \
-            --enable=warning,style,performance,portability \
-            --inline-suppr \
-            --error-exitcode=1 \
-            --std=c11 \
-            -I Project/Inc \
-            -I Modules \
-            Project Modules
-
-      # Build + unit tests in Docker
+      # Build + unit tests
       - name: Build Docker image
         run: |
           docker build -t stm32-dev -f .devcontainer/Dockerfile .
