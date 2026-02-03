@@ -10,11 +10,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4  # v4 is current major :contentReference[oaicite:0]{index=0}
+        uses: actions/checkout@v4
 
-      # Buildx + cached docker builds (makes CI faster)
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3  # v3 series :contentReference[oaicite:1]{index=1}
+        uses: docker/setup-buildx-action@v3
 
       - name: Build dev image (cached)
         uses: docker/build-push-action@v6
@@ -25,8 +24,8 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-        # build-push-action v6 is current major :contentReference[oaicite:2]{index=2}
 
+      # static analysis check
       - name: Static analysis (cppcheck)
         run: |
           docker run --rm -t \
@@ -43,6 +42,7 @@ jobs:
                 Project Modules \
             "
 
+      # Does it build?
       - name: Build firmware (ARM)
         run: |
           docker run --rm -t \
@@ -53,6 +53,7 @@ jobs:
               cmake --build build -j \
             "
 
+      # Run the tests
       - name: Unit tests (host)
         run: |
           docker run --rm -t \
