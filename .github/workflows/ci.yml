@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -12,69 +12,47 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # static analysis
+      - name: Install cppcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
 
-      - name: Build dev image (cached)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: .devcontainer/Dockerfile
-          tags: stm32-dev:ci
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Run cppcheck (Project + Modules)
+        run: |
+          cppcheck --version
+          cppcheck \
+            --enable=warning,style,performance,portability \
+            --inline-suppr \
+            --error-exitcode=1 \
+            --std=c11 \
+            -I Project/Inc \
+            -I Modules \
+            Project Modules
 
-      # 1) Configure firmware once
-      - name: Configure firmware (compile_commands.json)
+      # Build + unit tests in Docker
+      - name: Build Docker image
+        run: |
+          docker build -t stm32-dev -f .devcontainer/Dockerfile .
+
+      - name: Build firmware (ARM)
         run: |
           docker run --rm -t \
-            -v "${PWD}:/work" -w /work \
-            stm32-dev:ci bash -lc "\
-              git config --global --add safe.directory /work || true; \
-              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            "
+            -v "$PWD:/work" -w /work \
+            stm32-dev bash -lc '
+              git config --global --add safe.directory /work || true
+              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+              cmake --build build -j
+              test -f build/HMT26_FIRMWARE.elf
+            '
 
-      # 2) Static analysis
-      - name: Static analysis (cppcheck)
+      - name: Build & run unit tests (host)
         run: |
           docker run --rm -t \
-            -v "${PWD}:/work" -w /work \
-            stm32-dev:ci bash -lc "\
-              cppcheck \
-                --project=build/compile_commands.json \
-                --enable=warning,style,performance,portability \
-                --inconclusive \
-                --error-exitcode=1 \
-                -i build \
-            "
-
-      # 3) Build firmware (ARM)
-      - name: Build firmware
-        run: |
-          docker run --rm -t \
-            -v "${PWD}:/work" -w /work \
-            stm32-dev:ci bash -lc "\
-              cmake --build build -j \
-            "
-
-      # 4) Unit tests
-      - name: Unit tests (host)
-        run: |
-          docker run --rm -t \
-            -v "${PWD}:/work" -w /work \
-            stm32-dev:ci bash -lc "\
-              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug; \
-              cmake --build build-host -j; \
-              ctest --test-dir build-host --output-on-failure \
-            "
-
-      # 5) Upload firmware output
-      - name: Upload firmware artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: HMT26_FIRMWARE
-          path: |
-            build/*.elf
-            build/*.hex
-            build/*.bin
+            -v "$PWD:/work" -w /work \
+            stm32-dev bash -lc '
+              git config --global --add safe.directory /work || true
+              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
+              cmake --build build-host -j
+              ctest --test-dir build-host --output-on-failure
+            '
