@@ -25,48 +25,56 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # static analysis check
+      # 1) Configure firmware once
+      - name: Configure firmware (compile_commands.json)
+        run: |
+          docker run --rm -t \
+            -v "${PWD}:/work" -w /work \
+            stm32-dev:ci bash -lc "\
+              git config --global --add safe.directory /work || true; \
+              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            "
+
+      # 2) Static analysis
       - name: Static analysis (cppcheck)
         run: |
           docker run --rm -t \
             -v "${PWD}:/work" -w /work \
             stm32-dev:ci bash -lc "\
               cppcheck \
-                --enable=all --inconclusive \
+                --project=build/compile_commands.json \
+                --enable=warning,style,performance,portability \
+                --inconclusive \
                 --error-exitcode=1 \
-                --inline-suppr \
-                --suppress=missingIncludeSystem \
-                -i build -i Drivers -i cmake -i .devcontainer -i .vscode -i .idea \
-                -I Project/Inc \
-                -I Modules \
-                Project Modules \
+                -i build \
             "
 
-      # Does it build?
-      - name: Build firmware (ARM)
+      # 3) Build firmware (ARM)
+      - name: Build firmware
         run: |
           docker run --rm -t \
             -v "${PWD}:/work" -w /work \
             stm32-dev:ci bash -lc "\
-              git config --global --add safe.directory /work || true; \
-              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug; \
               cmake --build build -j \
             "
 
-      # Run the tests
+      # 4) Unit tests
       - name: Unit tests (host)
         run: |
           docker run --rm -t \
             -v "${PWD}:/work" -w /work \
             stm32-dev:ci bash -lc "\
-              git config --global --add safe.directory /work || true; \
               cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug; \
               cmake --build build-host -j; \
               ctest --test-dir build-host --output-on-failure \
             "
 
+      # 5) Upload firmware output
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
-          name: firmware-elf
-          path: build/*.elf
+          name: HMT26_FIRMWARE
+          path: |
+            build/*.elf
+            build/*.hex
+            build/*.bin
