@@ -4,11 +4,12 @@
 
 #include "app.h"
 
-
+// cppcheck-suppress unusedFunction
 void app_init(void) {
     // Initialization of the application
 }
 
+// cppcheck-suppress unusedFunction
 void app_loop(void) {
     __asm__("nop"); // nop does nothing
 
