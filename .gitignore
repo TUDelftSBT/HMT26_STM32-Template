@@ -7,3 +7,7 @@
 /Modules/
 /build/
 usb-port.cfg
+
+build/
+build-host/
+cmake-build-*/

@@ -12,7 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Build + unit tests
+      # IMPORTANT: make sure build directories are not checked out / not conflicting
+      - name: Clean build directories on runner
+        run: |
+          rm -rf build build-host
+
       - name: Build Docker image
         run: |
           docker build -t stm32-dev -f .devcontainer/Dockerfile .
@@ -24,11 +28,10 @@ jobs:
             stm32-dev bash -lc '
               set -e
               git config --global --add safe.directory /work || true
-          
-              rm -rf build-ci-firmware
-              cmake -S . -B build-ci-firmware -DCMAKE_BUILD_TYPE=Debug
-              cmake --build build-ci-firmware -j
-              test -f build-ci-firmware/HMT26_FIRMWARE.elf
+              rm -rf build
+              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+              cmake --build build -j
+              test -f build/HMT26_FIRMWARE.elf
             '
 
       - name: Build & run unit tests (host)
@@ -38,9 +41,8 @@ jobs:
             stm32-dev bash -lc '
               set -e
               git config --global --add safe.directory /work || true
-          
-              rm -rf build-ci-host
-              cmake -S tests -B build-ci-host -DCMAKE_BUILD_TYPE=Debug
-              cmake --build build-ci-host -j
-              ctest --test-dir build-ci-host --output-on-failure
+              rm -rf build-host
+              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
+              cmake --build build-host -j
+              ctest --test-dir build-host --output-on-failure
             '
