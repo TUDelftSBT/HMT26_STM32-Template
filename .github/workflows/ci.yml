@@ -39,3 +39,18 @@ jobs:
               cmake --build build-host -j
               ctest --test-dir build-host --output-on-failure
             "
+
+      - name: Static analysis (clang-tidy)
+        run: |
+          docker run --rm -t \
+            --user "$(id -u):$(id -g)" \
+            -v "${{ github.workspace }}:/work" -w /work \
+            stm32-dev bash -lc "
+              set -euo pipefail
+              rm -rf build-host
+              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+              find Project Modules -type f \( -name '*.c' -o -name '*.cpp' \) -print0 \
+                | xargs -0 -r clang-tidy -p build-host
+
+      

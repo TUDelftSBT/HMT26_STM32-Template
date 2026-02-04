@@ -123,10 +123,19 @@ docker build -t stm32-dev -f .devcontainer/Dockerfile .
 ```
 
 ### or ...
-you just run in the cmd
+you just run in the cmd. Image and analyze builds the docker image and does static analysis 
 
 ```
 .\scripts\image.ps1
+```
+
+```
+.\scripts\analyze.ps1
+```
+The report is generated in ```build-host/clang-tidy.txt```
+
+The build script builds the code, test runs the tests. You will figure it out
+```
 .\scripts\build.ps1
 .\scripts\test.ps1
 ```
