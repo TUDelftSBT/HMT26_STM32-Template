@@ -11,20 +11,53 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t stm32-dev -f .devcontainer/Dockerfile .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          tags: stm32-dev:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake', '.devcontainer/Dockerfile') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
 
       - name: Build firmware
         run: |
           docker run --rm -t \
             --user "$(id -u):$(id -g)" \
             -v "${{ github.workspace }}:/work" -w /work \
-            stm32-dev bash -lc "
+            -e CCACHE_DIR=/work/.ccache \
+            stm32-dev:ci bash -lc "
               set -e
               rm -rf build
-              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja || cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
               cmake --build build -j
               test -f build/HMT26_FIRMWARE.elf
+            "
+
+      - name: Configure + build host tests (once)
+        run: |
+          docker run --rm -t \
+            --user "$(id -u):$(id -g)" \
+            -v "${{ github.workspace }}:/work" -w /work \
+            -e CCACHE_DIR=/work/.ccache \
+            stm32-dev:ci bash -lc "
+              set -e
+              rm -rf build-host
+              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja || \
+                cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+              cmake --build build-host -j
             "
 
       - name: Run unit tests
@@ -32,11 +65,8 @@ jobs:
           docker run --rm -t \
             --user "$(id -u):$(id -g)" \
             -v "${{ github.workspace }}:/work" -w /work \
-            stm32-dev bash -lc "
+            stm32-dev:ci bash -lc "
               set -e
-              rm -rf build-host
-              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
-              cmake --build build-host -j
               ctest --test-dir build-host --output-on-failure
             "
 
@@ -47,13 +77,8 @@ jobs:
             --user "$(id -u):$(id -g)" \
             -e HOME=/tmp \
             -v "${{ github.workspace }}:/work" -w /work \
-            stm32-dev bash <<'EOF'
+            stm32-dev:ci bash <<'EOF'
           set -euo pipefail
-          rm -rf build-host
-          cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
           find Project Modules -type f \( -name '*.c' -o -name '*.cpp' \) -print0 \
             | xargs -0 -r clang-tidy -p build-host -j "$(nproc)"
           EOF
-      
-
-      
