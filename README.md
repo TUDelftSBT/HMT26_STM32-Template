@@ -140,6 +140,24 @@ The build script builds the code, test runs the tests. You will figure it out
 .\scripts\test.ps1
 ```
 
+### Static analysis integration
+Static analysis can be made nicer with clion integration. 
+
+```
+winget install --id LLVM.LLVM -e
+```
+And again add the bin file to the path variables. You got this i believe in you. 
+
+check with 
+```
+clang-tidy --version
+clangd --version
+```
+
+
+
+
+
 ## Credits
 Template created by Daan Posthumus. Edited by Erik van Weelderen.
 
