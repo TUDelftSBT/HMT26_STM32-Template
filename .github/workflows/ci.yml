@@ -4,9 +4,37 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      IMAGE_TAG: stm32-dev:ci
+      WORKDIR: /work
+      CCACHE_DIR: /work/.ccache
+
+      DOCKER_RUN: >-
+        docker run --rm
+        --user 1001:1001
+        -e HOME=/tmp
+        -v ${{ github.workspace }}:/work
+        -w /work
+        -e CCACHE_DIR=/work/.ccache
+        -e CCACHE_BASEDIR=/work
+        -e CCACHE_COMPRESS=1
+        -e CCACHE_MAXSIZE=500M
 
     steps:
       - uses: actions/checkout@v4
@@ -14,17 +42,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image (cached)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: .devcontainer/Dockerfile
-          tags: stm32-dev:ci
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Cache ccache
+      - name: Restore ccache
         uses: actions/cache@v4
         with:
           path: .ccache
@@ -32,53 +50,68 @@ jobs:
           restore-keys: |
             ccache-${{ runner.os }}-
 
+      - name: Determine cache write eligibility
+        id: cacheperm
+        run: |
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            echo "write=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event.pull_request.head.repo.full_name }}" == "${{ github.repository }}" ]]; then
+            echo "write=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "write=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Docker image (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          tags: ${{ env.IMAGE_TAG }}
+          load: true
+          cache-from: type=gha
+          cache-to: ${{ steps.cacheperm.outputs.write == 'true' && 'type=gha,mode=max' || '' }}
+
+      - name: Show tool versions (inside container)
+        run: |
+          $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
+            set -euo pipefail
+            cmake --version
+            ccache --version || true
+            ninja --version || true
+            clang-tidy --version || true
+          '
+
       - name: Build firmware
         run: |
-          docker run --rm -t \
-            --user "$(id -u):$(id -g)" \
-            -v "${{ github.workspace }}:/work" -w /work \
-            -e CCACHE_DIR=/work/.ccache \
-            stm32-dev:ci bash -lc "
-              set -e
-              rm -rf build
-              cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja || cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-              cmake --build build -j
-              test -f build/HMT26_FIRMWARE.elf
-            "
+          $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
+            set -euo pipefail
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+            cmake --build build --parallel
+            test -f build/HMT26_FIRMWARE.elf
+            ccache -s || true
+          '
 
-      - name: Configure + build host tests (once)
+      - name: Configure + build host tests
         run: |
-          docker run --rm -t \
-            --user "$(id -u):$(id -g)" \
-            -v "${{ github.workspace }}:/work" -w /work \
-            -e CCACHE_DIR=/work/.ccache \
-            stm32-dev:ci bash -lc "
-              set -e
-              rm -rf build-host
-              cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja || \
-                cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-              cmake --build build-host -j
-            "
+          $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
+            set -euo pipefail
+            cmake -S tests -B build-host -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            cmake --build build-host --parallel
+            ccache -s || true
+          '
 
       - name: Run unit tests
         run: |
-          docker run --rm -t \
-            --user "$(id -u):$(id -g)" \
-            -v "${{ github.workspace }}:/work" -w /work \
-            stm32-dev:ci bash -lc "
-              set -e
-              ctest --test-dir build-host --output-on-failure
-            "
+          $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
+            set -euo pipefail
+            ctest --test-dir build-host --output-on-failure
+          '
 
       - name: Static analysis (clang-tidy)
-        shell: bash
         run: |
-          docker run --rm -i \
-            --user "$(id -u):$(id -g)" \
-            -e HOME=/tmp \
-            -v "${{ github.workspace }}:/work" -w /work \
-            stm32-dev:ci bash <<'EOF'
-          set -euo pipefail
-          find Project Modules -type f \( -name '*.c' -o -name '*.cpp' \) -print0 \
-            | xargs -0 -r clang-tidy -p build-host -j "$(nproc)"
-          EOF
+          $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
+            set -euo pipefail
+            # Use the compile database from build-host (-p build-host)
+            find Project -type f \( -name "*.c" -o -name "*.cpp" \) -print0 \
+              | xargs -0 -r clang-tidy -p build-host -j "$(nproc)"
+          '
