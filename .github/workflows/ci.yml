@@ -111,7 +111,6 @@ jobs:
         run: |
           $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
             set -euo pipefail
-            # Use the compile database from build-host (-p build-host)
             find Project -type f \( -name "*.c" -o -name "*.cpp" \) -print0 \
               | xargs -0 -r clang-tidy -p build-host
           '
