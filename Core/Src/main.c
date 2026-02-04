@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "app.h"
 
 /* USER CODE END Includes */
 
@@ -97,6 +98,7 @@ int main(void)
   MX_TIM13_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
+  app_init();
 
   /* USER CODE END 2 */
 
@@ -108,6 +110,7 @@ int main(void)
     HAL_GPIO_TogglePin(LED_DEBUG_1_GPIO_Port, LED_DEBUG_1_Pin);
     HAL_Delay (100); 
     /* USER CODE BEGIN 3 */
+    app_loop();
   }
   /* USER CODE END 3 */
 }
