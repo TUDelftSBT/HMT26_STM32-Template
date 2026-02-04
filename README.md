@@ -65,6 +65,111 @@ example ssh@gitlab.com/example.ssh main
 ## Custom Keybindings
 Erik wanted to add custom keybindings for certain tasks, but this did not work. He tried to follow the [vscode docs](https://code.visualstudio.com/docs/debugtest/tasks#_binding-keyboard-shortcuts-to-tasks) and [this stackoverflow post](https://stackoverflow.com/questions/48945319/a-keybindings-json-per-workspace-in-visual-studio-code), but did not manage to get it to work. So fix it if you'd like!
 
+## Setup - Teun
+### Build instructions
+
+The project uses docker so that we are not dependent of the OS. 
+
+Make sure to have Docker Desktop installed and running. 
+
+To build the docker image
+
+```
+docker build -t stm32-dev -f .devcontainer/Dockerfile .
+```
+
+Then to run a container with the repo mounted
+
+```
+docker run --rm -it -v ${PWD}:/work -w /work stm32-dev bash
+```
+
+required on Windows bind mounts, not sure if others will have issues, but git has a safety check 
+
+```
+git config --global --add safe.directory /work
+```
+
+Build (+ some other stuff)
+```
+rm -rf build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -j
+```
+
+if you want to run the tests in test folders do the following
+
+```
+rm -rf build-host
+cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-host -j
+ctest --test-dir build-host --output-on-failure
+```
+
+If gcc and g++ not working then first of that is very interesting and probably a problem but to check run
+
+```
+gcc --version
+g++ --version
+```
+
+and fix 
+```
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+docker build -t stm32-dev -f .devcontainer/Dockerfile .
+```
+
+### or ...
+you just run in the cmd. Image and analyze builds the docker image and does static analysis 
+
+```
+.\scripts\image.ps1
+```
+
+```
+.\scripts\analyze.ps1
+```
+The report is generated in ```build-host/clang-tidy.txt```
+
+The build script builds the code, test runs the tests. You will figure it out
+```
+.\scripts\build.ps1
+.\scripts\test.ps1
+```
+
+### Static analysis integration
+Static analysis can be made nicer with clion integration. 
+
+```
+winget install --id LLVM.LLVM -e
+```
+And again add the bin file to the path variables. You got this i believe in you. 
+
+check with 
+```
+clang-tidy --version
+clangd --version
+```
+
+## local pipeline
+To run the pipeline locally 
+
+```
+winget install nektos.act
+act --version
+```
+
+then 
+```
+act -W .github/workflows/ci.yml
+```
+
+
+
+
 ## Credits
 Template created by Daan Posthumus. Edited by Erik van Weelderen.
 
