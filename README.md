@@ -154,6 +154,18 @@ clang-tidy --version
 clangd --version
 ```
 
+## local pipeline
+To run the pipeline locally 
+
+```
+winget install nektos.act
+act --version
+```
+
+then 
+```
+act -W .github/workflows/ci.yml
+```
 
 
 

@@ -43,16 +43,17 @@ jobs:
       - name: Static analysis (clang-tidy)
         shell: bash
         run: |
-          set -euo pipefail
           docker run --rm -i \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
             -v "${{ github.workspace }}:/work" -w /work \
             stm32-dev bash <<'EOF'
           set -euo pipefail
           rm -rf build-host
           cmake -S tests -B build-host -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
           find Project Modules -type f \( -name '*.c' -o -name '*.cpp' \) -print0 \
-            | xargs -0 -r clang-tidy -p build-host
+            | xargs -0 -r clang-tidy -p build-host -j "$(nproc)"
           EOF
+      
 
       
