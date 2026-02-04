@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          docker run --rm -t \
+          docker run --rm -i \
             -v "${{ github.workspace }}:/work" -w /work \
             stm32-dev bash <<'EOF'
           set -euo pipefail
