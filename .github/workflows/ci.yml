@@ -113,5 +113,5 @@ jobs:
             set -euo pipefail
             # Use the compile database from build-host (-p build-host)
             find Project -type f \( -name "*.c" -o -name "*.cpp" \) -print0 \
-              | xargs -0 -r clang-tidy -p build-host -j "$(nproc)"
+              | xargs -0 -r clang-tidy -p build-host
           '
