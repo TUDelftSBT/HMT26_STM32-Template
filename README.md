@@ -16,6 +16,7 @@ This repo includes a setup for developing on STM32 using a custom build toolchai
 2. Use `usb-passthrough-list.bat` to find where your STLink is connected.
 3. Create a copy of the `usb-port.cfg.template` and rename it to `usb-port.cfg` and edit the usb port to the one you just found.
 4. Run `usb-passthrough-bind.bat`
+5. To enable SSH passthrough for Windows to the devcontainer (assuming that you have the ssh keys in .ssh), you must run `sudo powershell .\scripts\windows\enable-ssh-passthrough.ps1`
 
 ## ST32CUBEMX project
 There is one file in this project related to the ST32CUBEMX project. ST32CUBEMX can be installed via the website, then going to downloads, entering your email and then installing it via the installer that you got in your email.
