@@ -11,3 +11,5 @@ usb-port.cfg
 build/
 build-host/
 cmake-build-*/
+
+.github/workflows/.secrets
