@@ -36,6 +36,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     cppcheck \
     clang-tidy \
+     usbutils \
     && rm -rf /var/lib/apt/lists/*
 
 # Build jimTcl
