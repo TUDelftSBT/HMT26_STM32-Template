@@ -15,3 +15,8 @@ cmake-build-*/
 Testing/
 
 .github/workflows/.secrets
+cmake-build-*/
+
+# Used for Trice
+li.json
+til.json

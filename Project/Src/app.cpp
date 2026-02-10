@@ -4,8 +4,12 @@
 
 #include "app.h"
 
+#include "trice.h"
+
 void app_init(void) {
     // Initialization of the application
+    TriceInit();
+    trice("hello");
 }
 
 void app_loop(void) {
