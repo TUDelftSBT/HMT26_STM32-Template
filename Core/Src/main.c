@@ -107,10 +107,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(LED_DEBUG_1_GPIO_Port, LED_DEBUG_1_Pin);
-    HAL_Delay (100); 
-    /* USER CODE BEGIN 3 */
     app_loop();
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
