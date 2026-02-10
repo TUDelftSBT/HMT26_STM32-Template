@@ -64,7 +64,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SOURCES}
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/**/Inc)
+file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
 
 # Filter only directories that end with "/Inc"
 set(FINAL_INC_DIRS "")
@@ -79,6 +79,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${FINAL_INC_DIRS}
     Project/Inc
+    Modules/trice/src
 )
 
 # Add project symbols (macros)
