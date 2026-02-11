@@ -65,6 +65,13 @@ example ssh@gitlab.com/example.ssh main
 ## Custom Keybindings
 Erik wanted to add custom keybindings for certain tasks, but this did not work. He tried to follow the [vscode docs](https://code.visualstudio.com/docs/debugtest/tasks#_binding-keyboard-shortcuts-to-tasks) and [this stackoverflow post](https://stackoverflow.com/questions/48945319/a-keybindings-json-per-workspace-in-visual-studio-code), but did not manage to get it to work. So fix it if you'd like!
 
+## Template syncing
+So the only reason that this template is public, is so that the workflow for template syncing is simpler.
+
+Use the `.templatesyncignore` file to ignore certain files when the template is updated.
+
+How to request a template sync? Well it should happen once every week automatically. Additionally, you can manually sync with the template by going to the `Actions` tab of your project, then clicking left on `Sync changes from template`, then requesting a manual rerun. This should create a pull request with the changes.
+
 ## Setup - Teun
 ### Build instructions
 
