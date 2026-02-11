@@ -1,0 +1,21 @@
+# Preserve workflows
+.github/workflows/*
+!.github/workflows/sync-from-template.yml
+
+# Preserve ignore rules
+.gitignore
+
+# Preserve readme
+README.md
+
+# Preserve Copilot instructions
+.github/copilot-instructions.md
+
+# Preserve VS Code settings
+.vscode
+
+# Preserve project specific code
+Project/
+tests/
+modules.txt
+HMT26_template.ioc
