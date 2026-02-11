@@ -70,6 +70,8 @@ So the only reason that this template is public, is so that the workflow for tem
 
 Use the `.templatesyncignore` file to ignore certain files when the template is updated.
 
+How to request a template sync? Well it should happen once every week automatically. Additionally, you can manually sync with the template by going to the `Actions` tab of your project, then clicking left on `Sync changes from template`, then requesting a manual rerun. This should create a pull request with the changes.
+
 ## Setup - Teun
 ### Build instructions
 
