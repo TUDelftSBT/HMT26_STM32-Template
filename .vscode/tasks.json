@@ -7,13 +7,15 @@
             "command": "${command:remote-containers.rebuildAndReopenInContainer}",
             // Cannot remove as it will ask for more steps, hence defeating the workflow.
             "problemMatcher": [],
-            "dependsOn": ["Attach USB port"]
+            "dependsOn": [
+                "Attach USB port"
+            ]
         },
         {
             "label": "Attach USB port",
             "type": "shell",
             "command": "", //TODO fix this for linux.
-            "windows":{
+            "windows": {
                 "command": ".\\scripts\\windows\\usb-passthrough-attach.bat",
             },
             "problemMatcher": []
@@ -26,12 +28,27 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn" : ["Build Project"]
+            "dependsOn": [
+                "Build Project"
+            ]
         },
         {
             "label": "Build Project",
             "type": "shell",
+            // TODO: fix this command to use the CMake extension
             "command": "cmake --build ${workspaceFolder}/build/Debug --"
+        },
+        {
+            "label": "Build and Test",
+            "type": "shell",
+            "command": "./scripts/tests/run-tests.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
         }
     ],
 }
