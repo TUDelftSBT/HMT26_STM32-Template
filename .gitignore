@@ -10,6 +10,8 @@ usb-port.cfg
 
 build/
 build-host/
+build-test-on-host/
 cmake-build-*/
+Testing/
 
 .github/workflows/.secrets
