@@ -1,14 +1,7 @@
-# This should fix the errors? Unsure...
-# TODO: Test whether this fixes the problem with git in the devcontainer
-# https://thinkthroo.com/blog/text-auto-in-gitattributes
+# Source - https://stackoverflow.com/a/79802097
+# Posted by ozkanpakdil
+# Retrieved 2026-02-19, License - CC BY-SA 4.0
 
-# Auto-detect text files and ensure LF line endings in the repository
-* text=auto
-# Windows batch scripts must use CRLF
-*.bat text eol=crlf
-# Go files should use LF only
-*.go text eol=lf
-# Binary files should not be modified by Git
-*.png binary
-*.jpg binary
-*.pdf binary
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
