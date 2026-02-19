@@ -34,9 +34,12 @@
         },
         {
             "label": "Build Project",
-            "type": "shell",
-            // TODO: fix this command to use the CMake extension
-            "command": "cmake --build ${workspaceFolder}/build/Debug --"
+            "type": "cmake",
+            "command": "build",
+            "group": "build",
+            "problemMatcher": [],
+            // TODO: build in release when you want to foil
+            "detail": "CMake build task"
         },
         {
             "label": "Build and Test",
