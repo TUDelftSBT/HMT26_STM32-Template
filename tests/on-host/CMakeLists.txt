@@ -15,13 +15,13 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/../Project/Src/**.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../Project/Src/**.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Src/**.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Src/**.cpp"
 )
 
 file(GLOB_RECURSE MODULE_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/../Modules/**.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../Modules/**.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/../../Modules/**.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../../Modules/**.cpp"
 )
 
 add_library(hmt_code_under_test STATIC
@@ -30,7 +30,7 @@ add_library(hmt_code_under_test STATIC
 )
 
 target_include_directories(hmt_code_under_test PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/../Project/Inc"
+        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Inc"
         # "${CMAKE_CURRENT_LIST_DIR}/../Modules/SomeModule/Inc"
 )
 
