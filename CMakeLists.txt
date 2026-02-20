@@ -56,7 +56,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 
-file(GLOB_RECURSE SOURCES "Modules/*.c" "Modules/*.cpp" "Project/*.c" "Project/*.cpp")
+file(GLOB_RECURSE SOURCES "Modules/**.c" "Modules/**.cpp" "Project/**.c" "Project/**.cpp")
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
