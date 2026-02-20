@@ -104,7 +104,7 @@ jobs:
         run: |
           $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
             set -euo pipefail
-            cmake -S tests -B build-host -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            cmake -S tests/on-host -B build-host -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
             cmake --build build-host --parallel
             ccache -s || true
           '
