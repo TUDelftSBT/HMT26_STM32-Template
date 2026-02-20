@@ -1,21 +1,16 @@
-# Preserve workflows
-.github/workflows/*
-!.github/workflows/sync-from-template.yml
-
 # Preserve ignore rules
 .gitignore
 
 # Preserve readme
 README.md
 
-# Preserve Copilot instructions
-.github/copilot-instructions.md
-
-# Preserve VS Code settings
-.vscode
+.vscode/c_cpp_properties.json
 
 # Preserve project specific code
 Project/
 tests/
 modules.txt
-HMT26_template.ioc
+
+# Allow the person to manually pull the changes
+# Since the IOC file changes per project anyways
+*.ioc
