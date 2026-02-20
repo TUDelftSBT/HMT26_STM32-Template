@@ -29,7 +29,7 @@ include("cmake/gcc-arm-none-eabi.cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 # Enable CMake support for ASM and C languages
-enable_language(C ASM)
+enable_language(C CXX ASM)
 
 # Core project settings
 # Cannot change the project name to something else other than the CMAKE_PROJECT_NAME, because
@@ -92,4 +92,26 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     git_version
 
     # Add user defined libraries
+)
+
+# https://www.reddit.com/r/embedded/comments/1exl3r8/what_compiler_flags_do_you_guys_use_for_day_to/
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
+    -Wall
+    -Wextra
+    -Werror
+    -pedantic
+    -Wduplicated-cond
+    -Wduplicated-branches
+    -Wlogical-op
+    -Wnull-dereference
+    -Wshadow
+    -Wpointer-arith
+    -Wdangling-else
+    -Wrestrict
+    -Wdouble-promotion
+    -Wvla
+    -Wswitch-enum
+    -Wswitch-default
+    -Winvalid-pch
+    -Wodr
 )
