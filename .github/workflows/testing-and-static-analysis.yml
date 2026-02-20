@@ -12,7 +12,7 @@ jobs:
   delete-cancelled-runs:
     runs-on: ubuntu-latest
     steps:
-      - uses: MercuryTechnologies/delete-cancelled-runs@latest
+      - uses: 'MercuryTechnologies/delete-cancelled-runs@1.0.0'
         with:
           workflow-file: 'testing-and-static-analysis.yml'
 
