@@ -37,8 +37,8 @@ target_include_directories(hmt_code_under_test PUBLIC
 target_compile_definitions(hmt_code_under_test PUBLIC UNIT_TEST)
 
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/*.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/**.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/**.c"
 )
 
 add_executable(unit_tests
