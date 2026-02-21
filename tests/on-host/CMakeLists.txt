@@ -29,6 +29,10 @@ add_library(hmt_code_under_test STATIC
         ${MODULE_SOURCES}
 )
 
+# Include compile flags
+include(${CMAKE_SOURCE_DIR}/../../cmake/hmt-project-compile-flags.cmake)
+target_link_libraries(hmt_code_under_test HMT_project_compile_flags)
+
 target_include_directories(hmt_code_under_test PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/../../Project/Inc"
         # "${CMAKE_CURRENT_LIST_DIR}/../Modules/SomeModule/Inc"
