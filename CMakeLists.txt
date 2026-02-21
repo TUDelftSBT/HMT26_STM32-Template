@@ -51,12 +51,13 @@ check_git_setup()
 include(${CMAKE_SOURCE_DIR}/cmake/openstmodules/CMake_download_git_repo.cmake)
 process_modules_from_file("${CMAKE_SOURCE_DIR}/modules.txt")
 
+
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 
-file(GLOB_RECURSE SOURCES "Modules/**.c" "Modules/**.cpp" "Project/**.c" "Project/**.cpp")
+file(GLOB_RECURSE SOURCES "Modules/**.c" "Modules/**.cpp")
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
@@ -86,32 +87,13 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
 )
 
+include(${CMAKE_SOURCE_DIR}/Project/hmt-compile-project-lib.cmake)
+
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
+    HMT_PROJECT_LIB
     stm32cubemx
     git_version
 
     # Add user defined libraries
-)
-
-# https://www.reddit.com/r/embedded/comments/1exl3r8/what_compiler_flags_do_you_guys_use_for_day_to/
-target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE 
-    -Wall
-    -Wextra
-    -Werror
-    -pedantic
-    -Wduplicated-cond
-    -Wduplicated-branches
-    -Wlogical-op
-    -Wnull-dereference
-    -Wshadow
-    -Wpointer-arith
-    -Wdangling-else
-    -Wrestrict
-    -Wdouble-promotion
-    -Wvla
-    -Wswitch-enum
-    -Wswitch-default
-    -Winvalid-pch
-    -Wodr
 )
