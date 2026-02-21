@@ -3,7 +3,7 @@
 # This can get very annoying and even unmanageable. Hence we only apply these flags to our own code by creating a library.
 # You also do not want to use these options for the automatically generated code from STMCube.
 
-set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/../Project/)
+set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 # Create project code library
 file(GLOB_RECURSE PROJECT_SOURCES "${HMT_PROJECT_LIB_DIR}/**.c" "${HMT_PROJECT_LIB_DIR}/**.cpp")

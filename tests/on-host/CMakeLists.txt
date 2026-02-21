@@ -26,7 +26,7 @@ add_library(hmt_code_under_test STATIC
         ${MODULE_SOURCES}
 )
 
-include(${PROJECT_ROOT_DIR}/cmake/hmt-compile-project-lib.cmake)
+include(${PROJECT_ROOT_DIR}/Project/hmt-compile-project-lib.cmake)
 target_link_libraries(hmt_code_under_test HMT_PROJECT_LIB)
 
 target_include_directories(hmt_code_under_test PUBLIC
