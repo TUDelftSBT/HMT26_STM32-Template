@@ -16,25 +16,27 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+include(${PROJECT_ROOT_DIR}/Project/hmt-compile-project-lib.cmake)
+
 file(GLOB_RECURSE MODULE_SOURCES CONFIGURE_DEPENDS
         "${PROJECT_ROOT_DIR}/Modules/**.c"
         "${PROJECT_ROOT_DIR}/Modules/**.cpp"
 )
 
-# The project files are from the project lib
-add_library(hmt_code_under_test STATIC
-        ${MODULE_SOURCES}
-)
+if(MODULE_SOURCES)
+    add_library(HMT_MODULES_LIB STATIC
+            ${MODULE_SOURCES}
+    )
+    target_link_libraries(HMT_PROJECT_LIB HMT_MODULES_LIB)
+endif()
 
-include(${PROJECT_ROOT_DIR}/Project/hmt-compile-project-lib.cmake)
-target_link_libraries(hmt_code_under_test HMT_PROJECT_LIB)
 
-target_include_directories(hmt_code_under_test PUBLIC
+target_include_directories(HMT_PROJECT_LIB PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/Project/Inc"
-        # "${CMAKE_CURRENT_LIST_DIR}/../Modules/SomeModule/Inc"
+        "${CMAKE_CURRENT_LIST_DIR}/Modules/**/Inc"
 )
 
-target_compile_definitions(hmt_code_under_test PUBLIC UNIT_TEST)
+target_compile_definitions(HMT_PROJECT_LIB PUBLIC UNIT_TEST)
 
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_LIST_DIR}/**.cpp"
@@ -46,7 +48,7 @@ add_executable(unit_tests
 )
 
 target_link_libraries(unit_tests PRIVATE
-        hmt_code_under_test
+        HMT_PROJECT_LIB
         GTest::gtest_main
 )
 
