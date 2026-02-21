@@ -121,5 +121,4 @@ jobs:
           $DOCKER_RUN ${{ env.IMAGE_TAG }} bash -lc '
             set -euo pipefail
             find Project -type f \( -name "*.c" -o -name "*.cpp" \) -print0 \
-              | xargs -0 -r clang-tidy -p build-host
-          '
+              | xargs -0 -r clang-tidy -p build-host -extra-arg='-Wduplicated-branches -Wduplicated-cond -Wlogical-op -Wrestrict'
