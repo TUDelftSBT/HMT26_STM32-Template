@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(HMT26_HostTests LANGUAGES C CXX)
 
+set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../..)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -14,27 +16,21 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Src/**.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Src/**.cpp"
-)
-
 file(GLOB_RECURSE MODULE_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/../../Modules/**.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../../Modules/**.cpp"
+        "${PROJECT_ROOT_DIR}/Modules/**.c"
+        "${PROJECT_ROOT_DIR}/Modules/**.cpp"
 )
 
+# The project files are from the project lib
 add_library(hmt_code_under_test STATIC
-        ${PROJECT_SOURCES}
         ${MODULE_SOURCES}
 )
 
-# Include compile flags
-include(${CMAKE_SOURCE_DIR}/../../cmake/hmt-project-compile-flags.cmake)
-target_link_libraries(hmt_code_under_test HMT_project_compile_flags)
+include(${PROJECT_ROOT_DIR}/cmake/hmt-compile-project-lib.cmake)
+target_link_libraries(hmt_code_under_test HMT_PROJECT_LIB)
 
 target_include_directories(hmt_code_under_test PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/../../Project/Inc"
+        "${CMAKE_CURRENT_LIST_DIR}/Project/Inc"
         # "${CMAKE_CURRENT_LIST_DIR}/../Modules/SomeModule/Inc"
 )
 

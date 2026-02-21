@@ -51,18 +51,6 @@ check_git_setup()
 include(${CMAKE_SOURCE_DIR}/cmake/openstmodules/CMake_download_git_repo.cmake)
 process_modules_from_file("${CMAKE_SOURCE_DIR}/modules.txt")
 
-# Create project code library
-file(GLOB_RECURSE PROJECT_SOURCES "Project/**.c" "Project/**.cpp")
-add_library(HMT_PROJECT_CODE STATIC
-        ${PROJECT_SOURCES}
-)
-target_include_directories(HMT_PROJECT_CODE PUBLIC
-        "${CMAKE_SOURCE_DIR}/Project/Inc"
-)
-
-# Include compile flags only for the project
-include(${CMAKE_SOURCE_DIR}/cmake/hmt-project-compile-flags.cmake)
-target_link_libraries(HMT_PROJECT_CODE HMT_project_compile_flags)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -99,9 +87,11 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
 )
 
+include(${CMAKE_SOURCE_DIR}/cmake/hmt-compile-project-lib.cmake)
+
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
-    HMT_PROJECT_CODE
+    HMT_PROJECT_LIB
     stm32cubemx
     git_version
 
