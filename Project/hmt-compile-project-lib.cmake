@@ -18,7 +18,7 @@ target_include_directories(HMT_PROJECT_LIB PUBLIC
 # Add project symbols (macros)
 target_compile_definitions(HMT_PROJECT_LIB PRIVATE
     # Add user defined symbols
-    $<$<CONFIG:Debug>:DEBUG>
+    DEBUG=$<BOOL:$<CONFIG:Debug>>
 )
 
 
