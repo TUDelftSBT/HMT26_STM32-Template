@@ -16,7 +16,7 @@
             "type": "shell",
             "command": "", //TODO fix this for linux.
             "windows": {
-                "command": ".\\scripts\\windows\\usb-passthrough-attach.bat",
+                "command": ".\\scripts\\host-windows\\usb\\usb-passthrough-attach.bat",
             },
             "problemMatcher": []
         },
