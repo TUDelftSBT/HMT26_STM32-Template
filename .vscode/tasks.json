@@ -16,7 +16,7 @@
             "type": "shell",
             "command": "", //TODO fix this for linux.
             "windows": {
-                "command": ".\\scripts\\windows\\usb-passthrough-attach.bat",
+                "command": ".\\scripts\\host-windows\\usb\\usb-passthrough-attach.bat",
             },
             "problemMatcher": []
         },
@@ -44,7 +44,7 @@
         {
             "label": "Build and Test",
             "type": "shell",
-            "command": "./scripts/tests/run-tests.sh",
+            "command": "./scripts/dev-container/tests/run-tests.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
