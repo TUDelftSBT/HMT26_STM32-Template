@@ -10,9 +10,17 @@ file(GLOB_RECURSE PROJECT_SOURCES "${HMT_PROJECT_LIB_DIR}/**.c" "${HMT_PROJECT_L
 add_library(HMT_PROJECT_LIB STATIC
         ${PROJECT_SOURCES}
 )
+
 target_include_directories(HMT_PROJECT_LIB PUBLIC
         "${HMT_PROJECT_LIB_DIR}/Inc/"
 )
+
+# Add project symbols (macros)
+target_compile_definitions(HMT_PROJECT_LIB PRIVATE
+    # Add user defined symbols
+    $<$<CONFIG:Debug>:DEBUG>
+)
+
 
 # https://www.reddit.com/r/embedded/comments/1exl3r8/what_compiler_flags_do_you_guys_use_for_day_to/
 target_compile_options(HMT_PROJECT_LIB PRIVATE
