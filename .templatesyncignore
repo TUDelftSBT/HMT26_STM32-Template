@@ -13,8 +13,10 @@ README.md
 .vscode/c_cpp_properties.json
 
 # Preserve project specific code
-Project/
-tests/
+# So only ignore these files
+Project/Src/app.cpp
+Project/Inc/app.h
+
 modules.txt
 
 # Allow the person to manually pull the changes
