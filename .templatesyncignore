@@ -1,6 +1,12 @@
 # Preserve ignore rules
 .gitignore
 
+# Temporarily ignore workflows. But should be added back
+# TODO: Issue [TUDelftSBT/HMT26_STM32-Template#40](https://github.com/TUDelftSBT/HMT26_STM32-Template/issues/40)
+.github/workflows/*
+!.github/workflows/sync-from-template.yml
+
+
 # Preserve readme
 README.md
 
