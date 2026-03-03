@@ -9,5 +9,5 @@ call .\\load-usb-port.bat
 
 echo "Attaching to: " %USBPORT%
 
-start /B usbipd attach --wsl --busid %USBPORT% --auto-attach
+start /B usbipd attach --wsl --busid %USBPORT% --auto-attach --unplugged
 endlocal
