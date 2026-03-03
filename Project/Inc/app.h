@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#include "main.h"
+
 void app_init(void);
 void app_loop(void);
 
