@@ -23,6 +23,7 @@ file(GLOB_RECURSE MODULE_SOURCES CONFIGURE_DEPENDS
         "${PROJECT_ROOT_DIR}/Modules/**.cpp"
 )
 
+# TODO: Fix this for when modules are installed
 if(MODULE_SOURCES)
     add_library(HMT_MODULES_LIB STATIC
             ${MODULE_SOURCES}
@@ -32,8 +33,8 @@ endif()
 
 
 target_include_directories(HMT_PROJECT_LIB PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/Project/Inc"
-        "${CMAKE_CURRENT_LIST_DIR}/Modules/**/Inc"
+        "${PROJECT_ROOT_DIR}/Project/Inc"
+        "${PROJECT_ROOT_DIR}/Modules/"
 )
 
 target_compile_definitions(HMT_PROJECT_LIB PUBLIC UNIT_TEST)
@@ -45,6 +46,11 @@ file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
 
 add_executable(unit_tests
         ${TEST_SOURCES}
+)
+
+target_include_directories(unit_tests PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}"
+        "${CMAKE_CURRENT_LIST_DIR}/fakes"
 )
 
 target_link_libraries(unit_tests PRIVATE
