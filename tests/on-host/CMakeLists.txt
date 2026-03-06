@@ -58,5 +58,10 @@ target_link_libraries(unit_tests PRIVATE
         GTest::gtest_main
 )
 
+# Used for STATIC keyword
+target_compile_definitions(unit_tests PUBLIC
+        TESTING
+)
+
 include(GoogleTest)
 gtest_discover_tests(unit_tests)
