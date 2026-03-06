@@ -50,8 +50,8 @@ add_executable(unit_tests
 
 target_include_directories(unit_tests PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}"
-        "${CMAKE_CURRENT_LIST_DIR}/fakes"
-        "${CMAKE_CURRENT_LIST_DIR}/header-overrides"
+        "${CMAKE_CURRENT_LIST_DIR}/fakes/"
+        "${CMAKE_CURRENT_LIST_DIR}/header-overrides/"
 )
 
 target_link_libraries(unit_tests PRIVATE
@@ -62,6 +62,14 @@ target_link_libraries(unit_tests PRIVATE
 # Used for STATIC keyword
 target_compile_definitions(unit_tests PUBLIC
         TESTING
+)
+
+# Precompile the library headers
+# as they are very big and are not changed anyway
+target_precompile_headers(unit_tests PRIVATE
+    <gtest/gtest.h>
+    "header-overrides/main_override.h"
+    "fakes/fff.h"
 )
 
 include(GoogleTest)
