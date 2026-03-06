@@ -1,9 +1,7 @@
-//
-// Created by Teund on 03/02/2026.
-//
-
 #include <gtest/gtest.h>
 #include "check_build_config.h"
+
+#include "testing.hpp"
 
 TEST(Sanity, FrameworkRuns)
 {
