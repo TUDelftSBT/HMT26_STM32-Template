@@ -12,6 +12,7 @@
 #     - Is required because it is dependent on the Trice Lib, the Trice Config and the HAL.
 
 set(PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(PROJECT_ROOT_DIR ${PROJECT_DIR}/../../)
 set(TRICE_CONFIG_DIR ${PROJECT_DIR}/trice-config/)
 set(TRICE_SOURCE_DIR ${PROJECT_DIR}/trice/)
 
@@ -55,4 +56,5 @@ target_include_directories(TRICE_CONFIG_LIB PUBLIC
     ${TRICE_CONFIG_DIR}/Inc
 )
 
-target_link_libraries(TRICE_CONFIG_LIB PUBLIC TRICE_LIB TRICE_CONFIG)
+include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
+target_link_libraries(TRICE_CONFIG_LIB PUBLIC TRICE_LIB TRICE_CONFIG STM32_HEADERS)

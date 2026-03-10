@@ -10,9 +10,7 @@ extern "C" {
 #endif
 
 #include "triceConfig.h"
-// #include "usart.h"
 
-// #include "main.h" // hardware specific definitions
 
 #if TRICE_DEFERRED_UARTA == 1
 

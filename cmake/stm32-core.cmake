@@ -5,6 +5,11 @@
 
 # This also allows to later fake the libraries in testing by using some conditional 
 # compilation
+
+
+if(NOT STM32_HEADERS_INCLUDED)
+set( STM32_HEADERS_INCLUDED TRUE)
+
 add_library(STM32_HEADERS INTERFACE)
 
 # These are the include dirs of the variable: MX_Include_Dirs
@@ -22,3 +27,5 @@ target_compile_definitions(STM32_HEADERS INTERFACE
 	USE_HAL_DRIVER 
 	STM32F446xx
 )
+
+endif()
