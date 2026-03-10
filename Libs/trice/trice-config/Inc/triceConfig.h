@@ -3,7 +3,7 @@
 #define TRICE_CONFIG_H_
 
 // Used to ignore the errors
-#define TRICE_CLEAN 1
+#define TRICE_CLEAN 0
 
 #define TRICE_BUFFER TRICE_DOUBLE_BUFFER
 #define TRICE_DIRECT_OUTPUT 1

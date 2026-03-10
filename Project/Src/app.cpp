@@ -1,16 +1,12 @@
-//
-// Created by Teund on 02/02/2026.
-//
-
 #include "app.h"
 
-#include "trice.h"
+// #include "trice.h"
 #include "usart.h"
 
 void app_init(void) {
     // Initialization of the application
-    TriceInit();
-    trice("hello");
+    // TriceInit();
+    // trice("hello");
 }
 
 void app_loop(void) {

@@ -51,6 +51,11 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
 # Still it ignores the warnings on the include dirs by using SYSTEM INTERFACE
 include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
 
+add_subdirectory("${PROJECT_ROOT_DIR}/Libs/trice/"
+                ${CMAKE_BINARY_DIR}/trice_build)
+
 target_link_libraries(HMT_PROJECT_LIB
         STM32_HEADERS
+        TRICE_CONFIG_LIB
+        TRICE_LIB
 )
