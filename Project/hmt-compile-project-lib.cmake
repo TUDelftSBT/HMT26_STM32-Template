@@ -7,13 +7,20 @@ set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
 
 # Create project code library
-file(GLOB_RECURSE PROJECT_SOURCES "${HMT_PROJECT_LIB_DIR}/**.c" "${HMT_PROJECT_LIB_DIR}/**.cpp")
+file(GLOB_RECURSE PROJECT_SOURCES 
+        "${HMT_PROJECT_LIB_DIR}/**.c" 
+        "${HMT_PROJECT_LIB_DIR}/**.cpp"
+        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.c"
+        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.cpp"
+)
 add_library(HMT_PROJECT_LIB STATIC
         ${PROJECT_SOURCES}
 )
 
 target_include_directories(HMT_PROJECT_LIB PUBLIC
         "${HMT_PROJECT_LIB_DIR}/Inc/"
+        "${PROJECT_ROOT_DIR}/Libs/trice/trice/"
+        "${PROJECT_ROOT_DIR}/Libs/trice/trice-config/Inc"
 )
 
 # Add project symbols (macros)
@@ -51,11 +58,6 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
 # Still it ignores the warnings on the include dirs by using SYSTEM INTERFACE
 include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
 
-add_subdirectory("${PROJECT_ROOT_DIR}/Libs/trice/"
-                ${CMAKE_BINARY_DIR}/trice_build)
-
 target_link_libraries(HMT_PROJECT_LIB
         STM32_HEADERS
-        TRICE_CONFIG_LIB
-        TRICE_LIB
 )

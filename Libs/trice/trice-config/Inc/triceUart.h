@@ -9,29 +9,38 @@
 extern "C" {
 #endif
 
-#include "triceConfig.h"
-
+#include "trice.h"
 
 #if TRICE_DEFERRED_UARTA == 1
+#include "main.h"
 
-//! Check if a new byte can be written into trice transmit register.
-//! \retval 0 == not empty
-//! \retval !0 == empty
-//! User must provide this function.
-TRICE_INLINE uint32_t triceTxDataRegisterEmptyUartA(void);
+TRICE_INLINE uint32_t triceTxDataRegisterEmptyUartA(void) {
+    // HAL_GPIO_WritePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin, GPIO_PIN_SET);
+    return __HAL_UART_GET_FLAG(TRICE_UARTA, UART_FLAG_TXE);
+}
 
 //! Write value v into trice transmit register.
 //! \param v byte to transmit
 //! User must provide this function.
-TRICE_INLINE void triceTransmitData8UartA(uint8_t v);
+TRICE_INLINE void triceTransmitData8UartA(uint8_t v) {
+    HAL_GPIO_TogglePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin);
+    HAL_UART_Transmit(TRICE_UARTA, &v, 1, HAL_MAX_DELAY);
+}
 
 //! Allow interrupt for empty trice data transmit register.
 //! User must provide this function.
-TRICE_INLINE void triceEnableTxEmptyInterruptUartA(void);
+TRICE_INLINE void triceEnableTxEmptyInterruptUartA(void) {
+    // HAL_GPIO_WritePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin, GPIO_PIN_SET);
+    __HAL_UART_ENABLE_IT(TRICE_UARTA, UART_IT_TXE);
+}
 
 //! Disallow interrupt for empty trice data transmit register.
 //! User must provide this function.
-TRICE_INLINE void triceDisableTxEmptyInterruptUartA(void);
+TRICE_INLINE void triceDisableTxEmptyInterruptUartA(void) {
+    // HAL_GPIO_TogglePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin);
+    __HAL_UART_DISABLE_IT(TRICE_UARTA, UART_IT_TXE);
+}
+
 #endif
 
 #ifdef __cplusplus

@@ -22,8 +22,6 @@ endif()
 # You can change the name, but then you manually have to search for 'HMT26_FIRMWARE.elf' and change it everywhere in this repository.
 set(CMAKE_PROJECT_NAME HMT26_FIRMWARE)
 
-# Include toolchain file
-include("cmake/gcc-arm-none-eabi.cmake")
 
 # Enable compile command to ease indexing with e.g. clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)

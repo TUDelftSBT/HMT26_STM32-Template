@@ -2,4 +2,4 @@
 
 # Only do trice for the project, otherwise it is way too long.
 mkdir -p /root/.trice/cache/
-trice clean -src ./Project -src ./Tests -cache
+trice clean -src ./Project -src ./Tests -src ./Libs/trice/trice-config/Src -cache
