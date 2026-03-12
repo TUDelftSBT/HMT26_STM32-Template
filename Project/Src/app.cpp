@@ -10,10 +10,12 @@ void app_init(void) {
 }
 
 void app_loop(void) {
-    // trice("Hello world!");
-    // TriceTransfer(); // serve deferred output<<<
+    // TRice("Fun %x!\n", 0xadded ); // with "fixed" iD(170), 32-bit stamp, and with `\n`
+    // TRice("What %x!\n", 0xadded ); // with "fixed" iD(170), 32-bit stamp, and with `\n`
+    // TriceTransfer(); // call cycl
 
-    char c[] = "Hello world!";
-    HAL_UART_Transmit(&huart2, (uint8_t*)&c, sizeof(c), HAL_MAX_DELAY);
+    char d[] = "Hello world from uart interrupts!";
+    HAL_UART_Transmit_IT(&huart2, (uint8_t *) d, sizeof(d));
+    HAL_GPIO_TogglePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin);
     HAL_Delay(500);
 }
