@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define TRICE_OFF 0
+
 #ifndef TRICE_INLINE
 //! TRICE_INLINE is used for inlining trice code to be usable with any compiler. Define this value according to your compiler syntax.
 #define TRICE_INLINE static inline
