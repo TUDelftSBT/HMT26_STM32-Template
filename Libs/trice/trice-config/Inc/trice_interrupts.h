@@ -9,7 +9,7 @@ extern "C" {
 
 extern uint32_t ms32;
 void trice_systick_handler(void);
-void trice_usart2_interrupt(void);
+void trice_uart_interrupt(void);
 
 #ifdef __cplusplus
 }

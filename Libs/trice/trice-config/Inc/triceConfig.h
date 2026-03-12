@@ -1,7 +1,3 @@
-/*! \file triceConfig.h
-\author Thomas.Hoehenleitner [at] seerose.net
-*******************************************************************************/
-
 #ifndef TRICE_CONFIG_H_
 #define TRICE_CONFIG_H_
 
@@ -9,15 +5,31 @@
 extern "C" {
 #endif
 
+// ===========================================================
+//         CONFIGURATION SPACE FOR THE DUMB-DUMBS
+// ===========================================================
+
 #define TRICE_OFF 0
+
+// Define which uart handle to use.
+#define UART_USED_FOR_TRICE huart1
+
+//! TRICE_CLEAN, if found inside triceConfig.h, is modified by the Trice tool to silent editor warnings in the cleaned state.
+#define TRICE_CLEAN 0 // Do not define this at an other place! But you can delete this here.
+
+// ===========================================================
+
+
+
+
+// ===========================================================
+//       ONLY TOUCH WHEN YOU KNOW WHAT YOU'RE DOING
+// ===========================================================
 
 #ifndef TRICE_INLINE
 //! TRICE_INLINE is used for inlining trice code to be usable with any compiler. Define this value according to your compiler syntax.
 #define TRICE_INLINE static inline
 #endif
-
-//! TRICE_CLEAN, if found inside triceConfig.h, is modified by the Trice tool to silent editor warnings in the cleaned state.
-#define TRICE_CLEAN 0 // Do not define this at an other place! But you can delete this here.
 
 extern uint32_t ms32; //! ms32 is a 32-bit millisecond counter, counting circular in steps of 1 every ms.
 #define TriceStamp16 (SysTick->VAL) // Counts from 31999 -> 0 in each ms.
@@ -32,8 +44,8 @@ extern uint32_t ms32; //! ms32 is a 32-bit millisecond counter, counting circula
 #define TRICE_DEFERRED_OUTPUT 1
 #define TRICE_DEFERRED_UARTA 1
 
-extern UART_HandleTypeDef huart2;
-#define TRICE_UARTA (&huart2)
+extern UART_HandleTypeDef UART_USED_FOR_TRICE;
+#define TRICE_UARTA (& UART_USED_FOR_TRICE)
 
 #include "cmsis_gcc.h"
 #define TRICE_ENTER_CRITICAL_SECTION             \

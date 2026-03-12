@@ -1,5 +1,6 @@
 #include "trice_interrupts.h"
 #include "trice.h"
+#include "main.h"
 
 #if !TRICE_OFF
 // ms32 is a 32-bit millisecond counter, counting circular in steps of 1 every ms.
@@ -13,7 +14,7 @@ void trice_systick_handler(void) {
 }
 
 
-void trice_usart2_interrupt(void) {
+void trice_uart_interrupt(void) {
  /* USER CODE BEGIN USART2_IRQn 0 */
 #if !TRICE_OFF && defined( TRICE_UARTA ) // only needed. if backchannel is used
     if (__HAL_UART_GET_FLAG(TRICE_UARTA, UART_FLAG_RXNE)) { // Read Data Register Not Empty Flag 

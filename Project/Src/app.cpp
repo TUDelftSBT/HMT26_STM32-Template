@@ -13,7 +13,9 @@ void app_init(void) {
 }
 
 void app_loop(void) {
-    TRice("Ping from Trice\n");
+    TRice("Hello from the PCB!!\n");
+    
+    // You MUST call this function in the app_loop.
     TriceTransfer();
 
     HAL_GPIO_TogglePin(LED_DEBUG_2_GPIO_Port, LED_DEBUG_2_Pin);
