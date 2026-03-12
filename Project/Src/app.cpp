@@ -13,6 +13,7 @@ void app_loop(void) {
     // trice("Hello world!");
     // TriceTransfer(); // serve deferred output<<<
 
-    char c = 'A';
-    HAL_UART_Transmit(&huart2, (uint8_t*)&c, 1, HAL_MAX_DELAY);
+    char c[] = "Hello world!";
+    HAL_UART_Transmit(&huart2, (uint8_t*)&c, sizeof(c), HAL_MAX_DELAY);
+    HAL_Delay(500);
 }
