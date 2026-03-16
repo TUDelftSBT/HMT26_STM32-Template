@@ -73,6 +73,40 @@ Use the `.templatesyncignore` file to ignore certain files when the template is 
 
 How to request a template sync? Well it should happen once every week automatically. Additionally, you can manually sync with the template by going to the `Actions` tab of your project, then clicking left on `Sync changes from template`, then requesting a manual rerun. This should create a pull request with the changes.
 
+## Trice
+[Trice](https://github.com/rokath/trice) is the debug library which allows you to send debug messages via UART to your computer. Since it is an external library, there are a couple of things which you have to take care of.
+
+The trice library is installed in `Libs/trice` folder. There, in the `trice-config` folder, the config files are also present. These are the files which we have to define for the library to work.
+
+### Setup
+
+In these files, everything is configured. Additionally, these functions calls need to be added to the the following `Core` files:
+
+| Trice function | Trice location | To be called in Core function | Core function location |
+| --- | --- | --- | --- |
+| `trice_uart_interrupt()` | `trice_interrupts.h` | ` USARTx_IRQHandler()` | `Core/stm32f4xx_it.c` |
+| `trice_systick_handler()` | `trice_interrupts.h` | `Systick_Handler()` | `Core/stm32f4xx_it.c` |
+| `TriceTransfer()` | `trice.h` | `app_loop()` | `Project/app.c` |
+
+
+The USARTx function depends on which U(S)ART port you are using on the PCB. On all current (as of HMT26) PCB designs, this is **UART1**.
+
+### Usage
+TLDR: Take a look at the trice user manual. But in the code, always call **TR**rice(). This makes sure that the timestamps that the trice functions are called are also exported in the log file.
+
+When you want to send a float, take into acount that you have to call the `aFloat()` or `aDouble()` function before you format the string.
+
+```cpp
+float x = 7.2;
+trice( "%f", aFloat(x));
+
+// doubles require trice64
+double y = 7.2;
+trice64( "float %f and double %f", aFloat(x), aDouble(y));
+```
+
+Just read the manual on how to use trice. But of course, I know you won't be doing this. So good luck on your own!
+
 ## Setup - Teun
 ### Build instructions
 
