@@ -4,12 +4,12 @@
 extern "C" {
 #endif
 
-#include "main.h"
 #include "trice.h"
 #include "usart.h"
 
-void app_init(void);
-void app_loop(void);
+extern uint32_t ms32;
+void trice_systick_handler(void);
+void trice_uart_interrupt(void);
 
 #ifdef __cplusplus
 }
