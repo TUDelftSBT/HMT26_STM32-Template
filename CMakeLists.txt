@@ -86,7 +86,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
 )
 
-include(${CMAKE_SOURCE_DIR}/Project/hmt-compile-project-lib.cmake)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Project)
 
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}

@@ -13,25 +13,26 @@ file(GLOB_RECURSE PROJECT_SOURCES
         "${PROJECT_ROOT_DIR}/Libs/trice/**/**.c"
         "${PROJECT_ROOT_DIR}/Libs/trice/**/**.cpp"
 )
+
 add_library(HMT_PROJECT_LIB STATIC
         ${PROJECT_SOURCES}
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
+file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Modules/*)
 
 # Filter only directories that end with "/Inc"
 set(MODULE_INC_DIRS "")
 foreach(dir ${INC_DIRS})
-    if (IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${dir} AND dir MATCHES ".*/Inc$")
+    if (IS_DIRECTORY ${dir} AND dir MATCHES ".*/Inc$")
         list(APPEND MODULE_INC_DIRS ${dir})
     endif()
 endforeach()
 
 target_include_directories(HMT_PROJECT_LIB PUBLIC
+        ${MODULE_INC_DIRS}
         "${HMT_PROJECT_LIB_DIR}/Inc/"
         "${PROJECT_ROOT_DIR}/Libs/trice/trice/"
         "${PROJECT_ROOT_DIR}/Libs/trice/trice-config/Inc"
-        ${MODULE_INC_DIRS}
 )
 
 # Add project symbols (macros)
