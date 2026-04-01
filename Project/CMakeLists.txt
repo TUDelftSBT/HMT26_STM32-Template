@@ -31,8 +31,6 @@ endforeach()
 target_include_directories(HMT_PROJECT_LIB PUBLIC
         ${MODULE_INC_DIRS}
         "${HMT_PROJECT_LIB_DIR}/Inc/"
-        "${PROJECT_ROOT_DIR}/Libs/trice/trice/"
-        "${PROJECT_ROOT_DIR}/Libs/trice/trice-config/Inc"
 )
 
 # Add project symbols (macros)
@@ -63,19 +61,7 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
     -Wodr
 )
 
-
-# Add the STM32 headers to the project library.
-# That way the compiler can know where to find the header files.
-# These are then later linked in.
-# Still it ignores the warnings on the include dirs by using SYSTEM INTERFACE
-include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
-
-add_subdirectory(
-    "${PROJECT_ROOT_DIR}/Libs/trice"
-    "${CMAKE_BINARY_DIR}/Libs/trice"
-)
-
 target_link_libraries(HMT_PROJECT_LIB
-        STM32_HEADERS
-        trice
+    STM32_HEADERS
+    triceInterface
 )

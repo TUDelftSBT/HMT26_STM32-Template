@@ -78,12 +78,16 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${FINAL_INC_DIRS}
     Project/Inc
-    Modules/trice/src
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
+)
+
+add_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/Libs/trice"
+    "${CMAKE_BINARY_DIR}/Libs/trice"
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/Project)

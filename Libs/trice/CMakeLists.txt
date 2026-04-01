@@ -39,3 +39,5 @@ include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
 target_link_libraries(${LIB_NAME}
     STM32_HEADERS
 )
+
+add_library(triceInterface ALIAS ${LIB_NAME})
