@@ -15,7 +15,7 @@ extern "C" {
 #define UART_USED_FOR_TRICE huart1
 
 //! TRICE_CLEAN, if found inside triceConfig.h, is modified by the Trice tool to silent editor warnings in the cleaned state.
-#define TRICE_CLEAN 1 // Do not define this at an other place! But you can delete this here.
+#define TRICE_CLEAN 0 // Do not define this at an other place! But you can delete this here.
 
 // ===========================================================
 

@@ -7,9 +7,9 @@ set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
 
 # Create project code library
-file(GLOB_RECURSE PROJECT_SOURCES 
-        "${HMT_PROJECT_LIB_DIR}/**.c" 
-        "${HMT_PROJECT_LIB_DIR}/**.cpp"
+file(GLOB PROJECT_SOURCES 
+        "${HMT_PROJECT_LIB_DIR}/Src/*.c" 
+        "${HMT_PROJECT_LIB_DIR}/Src/*.cpp"
 )
 
 # Allow parent to specify files to exclude

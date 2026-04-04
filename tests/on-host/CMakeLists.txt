@@ -14,9 +14,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_LIST_DIR}/**.cpp"
-        # "${CMAKE_CURRENT_LIST_DIR}/**.c"
+file(GLOB TEST_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_LIST_DIR}/**/**.cpp"
 )
 
 add_executable(unit_tests
@@ -68,7 +67,6 @@ target_compile_definitions(unit_tests PUBLIC
 # as they are very big and are not changed anyway
 target_precompile_headers(unit_tests PUBLIC
     <gtest/gtest.h>
-    # "header-overrides/main_override.h"
     "fakes/fff.h"
 )
 

@@ -6,7 +6,7 @@ add_library(${LIB_NAME} STATIC
     triceMock.c
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Modules/*)
+file(GLOB INC_DIRS LIST_DIRECTORIES true CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Modules/*)
 
 # Filter only directories that end with "/Inc"
 set(MODULE_INC_DIRS "")

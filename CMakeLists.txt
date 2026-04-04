@@ -55,7 +55,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 
-file(GLOB_RECURSE SOURCES "Modules/**.c" "Modules/**.cpp")
+file(GLOB SOURCES "Modules/**.c" "Modules/**.cpp")
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
@@ -63,7 +63,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SOURCES}
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
+file(GLOB INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
 
 # Filter only directories that end with "/Inc"
 set(FINAL_INC_DIRS "")
