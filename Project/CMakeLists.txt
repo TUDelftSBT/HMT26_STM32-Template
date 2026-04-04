@@ -10,9 +10,12 @@ set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
 file(GLOB_RECURSE PROJECT_SOURCES 
         "${HMT_PROJECT_LIB_DIR}/**.c" 
         "${HMT_PROJECT_LIB_DIR}/**.cpp"
-        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.c"
-        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.cpp"
 )
+
+# Allow parent to specify files to exclude
+if(DEFINED EXCLUDED_SOURCES)
+    list(REMOVE_ITEM PROJECT_SOURCES ${EXCLUDED_SOURCES})
+endif()
 
 add_library(HMT_PROJECT_LIB STATIC
         ${PROJECT_SOURCES}
@@ -62,6 +65,6 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
 )
 
 target_link_libraries(HMT_PROJECT_LIB
-    STM32_HEADERS
+    STM32_HEADERS_INTERFACE
     triceInterface
 )

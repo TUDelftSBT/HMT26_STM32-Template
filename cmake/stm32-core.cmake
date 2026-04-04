@@ -28,4 +28,5 @@ target_compile_definitions(STM32_HEADERS INTERFACE
 	STM32F446xx
 )
 
+add_library(STM32_HEADERS_INTERFACE ALIAS STM32_HEADERS)
 endif()

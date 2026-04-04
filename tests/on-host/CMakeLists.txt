@@ -11,64 +11,64 @@ FetchContent_Declare(
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
 FetchContent_MakeAvailable(googletest)
-
 enable_testing()
-
-include(${PROJECT_ROOT_DIR}/Project/hmt-compile-project-lib.cmake)
-
-file(GLOB_RECURSE MODULE_SOURCES CONFIGURE_DEPENDS
-        "${PROJECT_ROOT_DIR}/Modules/**.c"
-        "${PROJECT_ROOT_DIR}/Modules/**.cpp"
-)
-
-# TODO: Fix this for when modules are installed
-if(MODULE_SOURCES)
-    add_library(HMT_MODULES_LIB STATIC
-            ${MODULE_SOURCES}
-    )
-    target_link_libraries(HMT_PROJECT_LIB HMT_MODULES_LIB)
-endif()
-
-
-target_include_directories(HMT_PROJECT_LIB PUBLIC
-        "${PROJECT_ROOT_DIR}/Project/Inc"
-        "${PROJECT_ROOT_DIR}/Modules/"
-)
-
-target_compile_definitions(HMT_PROJECT_LIB PUBLIC UNIT_TEST)
 
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_LIST_DIR}/**.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/**.c"
+        # "${CMAKE_CURRENT_LIST_DIR}/**.c"
 )
 
 add_executable(unit_tests
         ${TEST_SOURCES}
 )
 
-target_include_directories(unit_tests PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}"
-        "${CMAKE_CURRENT_LIST_DIR}/fakes/"
-        "${CMAKE_CURRENT_LIST_DIR}/header-overrides/"
+file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true CONFIGURE_DEPENDS ${PROJECT_ROOT_DIR}/Modules/*)
+
+# Filter only directories that end with "/Inc"
+set(MODULE_INC_DIRS "")
+foreach(dir ${INC_DIRS})
+    if (IS_DIRECTORY ${dir} AND dir MATCHES ".*/Inc$")
+        list(APPEND MODULE_INC_DIRS ${dir})
+    endif()
+endforeach()
+
+target_include_directories(unit_tests PUBLIC
+    "${CMAKE_CURRENT_LIST_DIR}"
+    "${CMAKE_CURRENT_LIST_DIR}/fakes"
+    ${MODULE_INC_DIRS}
 )
 
-target_link_libraries(unit_tests PRIVATE
-        HMT_PROJECT_LIB
-        GTest::gtest_main
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/fakes/stm32-core-override")
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/fakes/trice")
+
+get_filename_component(ABS_PATH_TO_EXCLUDE
+                       "${PROJECT_ROOT_DIR}/Project/Src/app.cpp"
+                       ABSOLUTE)
+set(EXCLUDED_SOURCES ${ABS_PATH_TO_EXCLUDE})
+
+add_subdirectory(
+    "${PROJECT_ROOT_DIR}/Project"
+    "${CMAKE_BINARY_DIR}/Project"
+)
+
+target_link_libraries(unit_tests PUBLIC
+    STM32_HEADERS_INTERFACE
+    triceInterface
+    HMT_PROJECT_LIB
+    GTest::gtest_main
 )
 
 # Used for STATIC keyword
 target_compile_definitions(unit_tests PUBLIC
-        TESTING
+    TESTING
 )
 
 # Precompile the library headers
 # as they are very big and are not changed anyway
-target_precompile_headers(unit_tests PRIVATE
+target_precompile_headers(unit_tests PUBLIC
     <gtest/gtest.h>
-    "header-overrides/main_override.h"
+    # "header-overrides/main_override.h"
     "fakes/fff.h"
 )
 
