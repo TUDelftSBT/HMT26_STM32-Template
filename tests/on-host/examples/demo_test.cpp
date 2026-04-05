@@ -26,8 +26,13 @@ TEST(Sanity, TriceWorking)
     EXPECT_TRUE(true);
 }
 
-TEST(Sanity, ModulesWorking)
+TEST(Sanity, ModulesHeadersWorking)
 {
+    // Can include something from the module headers.
+    // Implementations and/or functions not working yet.
+    // So calling a function from a module will result in a crash
+    // since the .c files are not linked into the tests.
+    // an option to circumvent this is use the FFF.
     database_bc_sysd_vcu_state_t just_here_to_show_that_dbc_works;
     (void) just_here_to_show_that_dbc_works;
 
