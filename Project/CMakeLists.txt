@@ -7,31 +7,33 @@ set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
 
 # Create project code library
-file(GLOB_RECURSE PROJECT_SOURCES 
-        "${HMT_PROJECT_LIB_DIR}/**.c" 
-        "${HMT_PROJECT_LIB_DIR}/**.cpp"
-        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.c"
-        "${PROJECT_ROOT_DIR}/Libs/trice/**/**.cpp"
+file(GLOB PROJECT_SOURCES 
+        "${HMT_PROJECT_LIB_DIR}/Src/*.c" 
+        "${HMT_PROJECT_LIB_DIR}/Src/*.cpp"
 )
+
+# Allow parent to specify files to exclude
+if(DEFINED EXCLUDED_SOURCES)
+    list(REMOVE_ITEM PROJECT_SOURCES ${EXCLUDED_SOURCES})
+endif()
+
 add_library(HMT_PROJECT_LIB STATIC
         ${PROJECT_SOURCES}
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
+file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/Modules/*)
 
 # Filter only directories that end with "/Inc"
 set(MODULE_INC_DIRS "")
 foreach(dir ${INC_DIRS})
-    if (IS_DIRECTORY ${CMAKE_SOURCE_DIR}/${dir} AND dir MATCHES ".*/Inc$")
+    if (IS_DIRECTORY ${dir} AND dir MATCHES ".*/Inc$")
         list(APPEND MODULE_INC_DIRS ${dir})
     endif()
 endforeach()
 
 target_include_directories(HMT_PROJECT_LIB PUBLIC
-        "${HMT_PROJECT_LIB_DIR}/Inc/"
-        "${PROJECT_ROOT_DIR}/Libs/trice/trice/"
-        "${PROJECT_ROOT_DIR}/Libs/trice/trice-config/Inc"
         ${MODULE_INC_DIRS}
+        "${HMT_PROJECT_LIB_DIR}/Inc/"
 )
 
 # Add project symbols (macros)
@@ -62,13 +64,7 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
     -Wodr
 )
 
-
-# Add the STM32 headers to the project library.
-# That way the compiler can know where to find the header files.
-# These are then later linked in.
-# Still it ignores the warnings on the include dirs by using SYSTEM INTERFACE
-include("${PROJECT_ROOT_DIR}/cmake/stm32-core.cmake")
-
 target_link_libraries(HMT_PROJECT_LIB
-        STM32_HEADERS
+    STM32_HEADERS_INTERFACE
+    triceInterface
 )

@@ -15,11 +15,11 @@ add_library(STM32_HEADERS INTERFACE)
 # These are the include dirs of the variable: MX_Include_Dirs
 # from the STM32Cube generated cmake file.
 target_include_directories(STM32_HEADERS SYSTEM INTERFACE
-    ${HMT_PROJECT_LIB_DIR}/../Core/Inc
-    ${HMT_PROJECT_LIB_DIR}/../Drivers/STM32F4xx_HAL_Driver/Inc
-    ${HMT_PROJECT_LIB_DIR}/../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
-    ${HMT_PROJECT_LIB_DIR}/../Drivers/CMSIS/Device/ST/STM32F4xx/Include
-    ${HMT_PROJECT_LIB_DIR}/../Drivers/CMSIS/Include
+    ${PROJECT_ROOT_DIR}/Core/Inc
+    ${PROJECT_ROOT_DIR}/Drivers/STM32F4xx_HAL_Driver/Inc
+    ${PROJECT_ROOT_DIR}/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+    ${PROJECT_ROOT_DIR}/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+    ${PROJECT_ROOT_DIR}/Drivers/CMSIS/Include
 )
 
 # Also copied from the STM32Cube cmake file.
@@ -28,4 +28,5 @@ target_compile_definitions(STM32_HEADERS INTERFACE
 	STM32F446xx
 )
 
+add_library(STM32_HEADERS_INTERFACE ALIAS STM32_HEADERS)
 endif()

@@ -55,7 +55,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 
-file(GLOB_RECURSE SOURCES "Modules/**.c" "Modules/**.cpp")
+file(GLOB SOURCES "Modules/**.c" "Modules/**.cpp")
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
@@ -63,7 +63,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SOURCES}
 )
 
-file(GLOB_RECURSE INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
+file(GLOB INC_DIRS LIST_DIRECTORIES true RELATIVE ${CMAKE_SOURCE_DIR} Modules/** Modules/**/Inc)
 
 # Filter only directories that end with "/Inc"
 set(FINAL_INC_DIRS "")
@@ -78,7 +78,6 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${FINAL_INC_DIRS}
     Project/Inc
-    Modules/trice/src
 )
 
 # Add project symbols (macros)
@@ -86,7 +85,12 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
 )
 
-include(${CMAKE_SOURCE_DIR}/Project/hmt-compile-project-lib.cmake)
+add_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/Libs/trice"
+    "${CMAKE_BINARY_DIR}/Libs/trice"
+)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/Project)
 
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
