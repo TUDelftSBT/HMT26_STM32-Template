@@ -3,8 +3,12 @@
 # This can get very annoying and even unmanageable. Hence we only apply these flags to our own code by creating a library.
 # You also do not want to use these options for the automatically generated code from STMCube.
 
-set(HMT_PROJECT_LIB_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
+if (NOT DEFINED PROJECT_ROOT_DIR)
+    set(PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
+endif()
+
+set(HMT_PROJECT_LIB_DIR ${PROJECT_ROOT_DIR}/Project)
+
 
 # Create project code library
 file(GLOB PROJECT_SOURCES 
@@ -44,6 +48,23 @@ target_compile_definitions(HMT_PROJECT_LIB PRIVATE
     DEBUG=$<BOOL:$<CONFIG:Debug>>
 )
 
+file(GLOB MODULE_SOURCES 
+    "${PROJECT_ROOT_DIR}/Modules/*/Src/*.c" 
+    "${PROJECT_ROOT_DIR}/Modules/*/Src/*.cpp" 
+)
+
+add_library(PROJECT_MODULES STATIC
+    ${MODULE_SOURCES}
+)
+target_include_directories(PROJECT_MODULES PUBLIC
+    ${MODULE_INC_DIRS}
+)
+target_link_libraries(PROJECT_MODULES
+    STM32_HEADERS_INTERFACE
+)
+
+add_library(PROJECT_MODULES_INTERFACE ALIAS PROJECT_MODULES)
+
 # https://www.reddit.com/r/embedded/comments/1exl3r8/what_compiler_flags_do_you_guys_use_for_day_to/
 target_compile_options(HMT_PROJECT_LIB PRIVATE
     -Wall
@@ -69,4 +90,5 @@ target_compile_options(HMT_PROJECT_LIB PRIVATE
 target_link_libraries(HMT_PROJECT_LIB
     STM32_HEADERS_INTERFACE
     triceInterface
+    PROJECT_MODULES_INTERFACE
 )
